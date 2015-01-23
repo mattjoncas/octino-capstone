@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{78EEE674-2424-4E16-A332-5990F7B6B3F9}</ProjectGuid>
+    <RootNamespace>RakNetServer</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Matt Joncas\Desktop\RakNet-master\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Matt Joncas\Desktop\RakNet-master\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Base64Encoder.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\BitStream.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CCRakNetSlidingWindow.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CCRakNetUDT.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CheckSum.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudCommon.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\CommandParserInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ConnectionGraph2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ConsoleServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DataCompressor.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DirectoryDeltaTransfer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DR_SHA1.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_BytePool.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_ByteQueue.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_HuffmanEncodingTree.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Table.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\DynDNS.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\EmailSender.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\EpochTimeToString.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileList.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileListTransfer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileOperations.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\FormatString.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\FullyConnectedMesh2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Getche.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Gets.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\GetTime.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\gettimeofday.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\GridSectorizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\HTTPConnection.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\HTTPConnection2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\IncrementalReadInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Itoa.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\LinuxStrings.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\LocklessTypes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\LogCommandParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\MessageFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatPunchthroughClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatPunchthroughServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionCommon.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NetworkIDManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\NetworkIDObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketConsoleLogger.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketFileLogger.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketizedTCP.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketLogger.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketOutputWindowLogger.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PluginInterface2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\PS4Includes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Rackspace.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakMemoryOverride.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetCommandParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_360_720.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_Berkley.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_Berkley_NativeClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_NativeClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_PS3_PS4.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_PS4.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_Vita.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_WindowsStore8.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_Windows_Linux.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2_Windows_Linux_360.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetStatistics.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetTransport2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetTypes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakPeer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakSleep.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakString.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakWString.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Rand.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RandSync.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReadyEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RelayPlugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReliabilityLayer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReplicaManager3.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\Router2.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\RPC4Plugin.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SecureHandshake.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SendToThread.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SignaledEvent.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SimpleMutex.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SocketLayer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\StatisticsHistory.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\StringCompressor.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\StringTable.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\SuperFastHash.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TableSerializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TCPInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TeamBalancer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TeamManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TelnetTransport.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\ThreadsafePacketLogger.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\TwoWayAuthentication.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPForwarder.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyClient.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyCoordinator.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyServer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariableDeltaSerializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariableListDeltaTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariadicSQLParser.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\VitaIncludes.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\WSAStartupSingleton.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\AutopatcherPatchContext.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\AutopatcherRepositoryInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Base64Encoder.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\BitStream.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CCRakNetSlidingWindow.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CCRakNetUDT.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CheckSum.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudClient.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudCommon.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CloudServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\CommandParserInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ConnectionGraph2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ConsoleServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DataCompressor.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DirectoryDeltaTransfer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DR_SHA1.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_BinarySearchTree.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_BPlusTree.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_BytePool.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_ByteQueue.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Hash.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Heap.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_HuffmanEncodingTree.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_HuffmanEncodingTreeFactory.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_HuffmanEncodingTreeNode.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_LinkedList.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_List.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Map.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_MemoryPool.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Multilist.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_OrderedChannelHeap.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_OrderedList.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Queue.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_QueueLinkedList.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_RangeList.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Table.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_ThreadsafeAllocatingQueue.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_Tree.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DS_WeightedGraph.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\DynDNS.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\EmailSender.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\EmptyHeader.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\EpochTimeToString.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Export.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileList.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileListNodeContext.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileListTransfer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileListTransferCBInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FileOperations.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FormatString.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\FullyConnectedMesh2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Getche.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Gets.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\GetTime.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\gettimeofday.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\GridSectorizer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\HTTPConnection.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\HTTPConnection2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\IncrementalReadInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\InternalPacket.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Itoa.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Kbhit.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\LinuxStrings.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\LocklessTypes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\LogCommandParser.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\MessageFilter.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\MessageIdentifiers.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\MTUSize.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NativeFeatureIncludes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NativeFeatureIncludesOverrides.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NativeTypes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatPunchthroughClient.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatPunchthroughServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionClient.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionCommon.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NatTypeDetectionServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NetworkIDManager.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\NetworkIDObject.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketConsoleLogger.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketFileLogger.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketizedTCP.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketLogger.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketOutputWindowLogger.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketPool.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PacketPriority.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PluginInterface2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PS3Includes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\PS4Includes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Rackspace.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakAlloca.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakAssert.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakMemoryOverride.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetCommandParser.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetDefines.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetDefinesOverrides.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSmartPtr.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetSocket2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetStatistics.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetTime.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetTransport2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetTypes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakNetVersion.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakPeer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakPeerInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakSleep.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakString.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakThread.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RakWString.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Rand.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RandSync.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReadyEvent.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RefCountedObj.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RelayPlugin.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReliabilityLayer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReplicaEnums.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ReplicaManager3.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\Router2.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\RPC4Plugin.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SecureHandshake.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SendToThread.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SignaledEvent.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SimpleMutex.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SimpleTCPServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SingleProducerConsumer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SocketDefines.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SocketIncludes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SocketLayer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\StatisticsHistory.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\StringCompressor.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\StringTable.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\SuperFastHash.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TableSerializer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TCPInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TeamBalancer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TeamManager.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TelnetTransport.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ThreadPool.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\ThreadsafePacketLogger.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TransportInterface.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\TwoWayAuthentication.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPForwarder.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyClient.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyCommon.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyCoordinator.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\UDPProxyServer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariableDeltaSerializer.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariableListDeltaTracker.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\VariadicSQLParser.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\VitaIncludes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\WindowsIncludes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\WSAStartupSingleton.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\XBox360Includes.h" />
+    <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.h" />
+    <ClInclude Include="NetworkManager.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
