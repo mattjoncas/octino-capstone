@@ -1,0 +1,134 @@
+﻿Build started 22/01/2015 7:22:40 PM.
+     1>Project "C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\RakNetClient\RakNetClient.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SFML\include /I"C:\Users\Matt Joncas\Desktop\RakNet-master\Source" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Renderer" /I"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\src" /I"C:\Users\Matt Joncas\Desktop\glm-0.9.5.4\glm" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\GUI" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp
+         Game.cpp
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(36): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(116): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(200): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(233): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(336): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(356): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(363): warning C4018: '<' : signed/unsigned mismatch
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\SFML\lib /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Debug" /LIBPATH:"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\lib" /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\Debug" "sfml-audio-d.lib" "sfml-graphics-d.lib" "sfml-network-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" ws2_32.lib OpenGL32.lib glew32.lib Renderer.lib GUI.lib SOIL.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.lib" /MACHINE:X86 Debug\Base64Encoder.obj
+         Debug\BitStream.obj
+         Debug\CCRakNetSlidingWindow.obj
+         Debug\CCRakNetUDT.obj
+         Debug\CheckSum.obj
+         Debug\CloudClient.obj
+         Debug\CloudCommon.obj
+         Debug\CloudServer.obj
+         Debug\CommandParserInterface.obj
+         Debug\ConnectionGraph2.obj
+         Debug\ConsoleServer.obj
+         Debug\DataCompressor.obj
+         Debug\DirectoryDeltaTransfer.obj
+         Debug\DR_SHA1.obj
+         Debug\DS_BytePool.obj
+         Debug\DS_ByteQueue.obj
+         Debug\DS_HuffmanEncodingTree.obj
+         Debug\DS_Table.obj
+         Debug\DynDNS.obj
+         Debug\EmailSender.obj
+         Debug\EpochTimeToString.obj
+         Debug\FileList.obj
+         Debug\FileListTransfer.obj
+         Debug\FileOperations.obj
+         Debug\FormatString.obj
+         Debug\FullyConnectedMesh2.obj
+         Debug\Getche.obj
+         Debug\Gets.obj
+         Debug\GetTime.obj
+         Debug\gettimeofday.obj
+         Debug\GridSectorizer.obj
+         Debug\HTTPConnection.obj
+         Debug\HTTPConnection2.obj
+         Debug\IncrementalReadInterface.obj
+         Debug\Itoa.obj
+         Debug\LinuxStrings.obj
+         Debug\LocklessTypes.obj
+         Debug\LogCommandParser.obj
+         Debug\MessageFilter.obj
+         Debug\NatPunchthroughClient.obj
+         Debug\NatPunchthroughServer.obj
+         Debug\NatTypeDetectionClient.obj
+         Debug\NatTypeDetectionCommon.obj
+         Debug\NatTypeDetectionServer.obj
+         Debug\NetworkIDManager.obj
+         Debug\NetworkIDObject.obj
+         Debug\PacketConsoleLogger.obj
+         Debug\PacketFileLogger.obj
+         Debug\PacketizedTCP.obj
+         Debug\PacketLogger.obj
+         Debug\PacketOutputWindowLogger.obj
+         Debug\PluginInterface2.obj
+         Debug\PS4Includes.obj
+         Debug\Rackspace.obj
+         Debug\RakMemoryOverride.obj
+         Debug\RakNetCommandParser.obj
+         Debug\RakNetSocket.obj
+         Debug\RakNetSocket2.obj
+         Debug\RakNetSocket2_360_720.obj
+         Debug\RakNetSocket2_Berkley.obj
+         Debug\RakNetSocket2_Berkley_NativeClient.obj
+         Debug\RakNetSocket2_NativeClient.obj
+         Debug\RakNetSocket2_PS3_PS4.obj
+         Debug\RakNetSocket2_PS4.obj
+         Debug\RakNetSocket2_Vita.obj
+         Debug\RakNetSocket2_WindowsStore8.obj
+         Debug\RakNetSocket2_Windows_Linux.obj
+         Debug\RakNetSocket2_Windows_Linux_360.obj
+         Debug\RakNetStatistics.obj
+         Debug\RakNetTransport2.obj
+         Debug\RakNetTypes.obj
+         Debug\RakPeer.obj
+         Debug\RakSleep.obj
+         Debug\RakString.obj
+         Debug\RakThread.obj
+         Debug\RakWString.obj
+         Debug\Rand.obj
+         Debug\RandSync.obj
+         Debug\ReadyEvent.obj
+         Debug\RelayPlugin.obj
+         Debug\ReliabilityLayer.obj
+         Debug\ReplicaManager3.obj
+         Debug\Router2.obj
+         Debug\RPC4Plugin.obj
+         Debug\SecureHandshake.obj
+         Debug\SendToThread.obj
+         Debug\SignaledEvent.obj
+         Debug\SimpleMutex.obj
+         Debug\SocketLayer.obj
+         Debug\StatisticsHistory.obj
+         Debug\StringCompressor.obj
+         Debug\StringTable.obj
+         Debug\SuperFastHash.obj
+         Debug\TableSerializer.obj
+         Debug\TCPInterface.obj
+         Debug\TeamBalancer.obj
+         Debug\TeamManager.obj
+         Debug\TelnetTransport.obj
+         Debug\ThreadsafePacketLogger.obj
+         Debug\TwoWayAuthentication.obj
+         Debug\UDPForwarder.obj
+         Debug\UDPProxyClient.obj
+         Debug\UDPProxyCoordinator.obj
+         Debug\UDPProxyServer.obj
+         Debug\VariableDeltaSerializer.obj
+         Debug\VariableListDeltaTracker.obj
+         Debug\VariadicSQLParser.obj
+         Debug\VitaIncludes.obj
+         Debug\WSAStartupSingleton.obj
+         Debug\_FindFirst.obj
+         Debug\Game.obj
+         Debug\main.obj
+         Debug\NetworkManager.obj
+         Debug\Player.obj
+         Debug\Tile.obj
+         RakNetClient.vcxproj -> C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.exe
+     1>Done Building Project "C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\RakNetClient\RakNetClient.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.76
