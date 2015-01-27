@@ -89,7 +89,8 @@ bool NetworkManager::Update(){
 			break;
 		case ID_INIT_MESSAGE_1:
 		{
-			if (AddClient()){
+			int _result = AddClient();
+			if (_result < 2){
 				//send confirmation
 				RakNet::BitStream bsOut;
 				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
@@ -104,7 +105,9 @@ bool NetworkManager::Update(){
 			else{
 				RakNet::BitStream bsOut;
 				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
-				bsOut.Write("id invalid");
+				if (_result == 2){ bsOut.Write("id invalid"); }
+				else if (_result == 3){ bsOut.Write("lobby full"); }
+				else { bsOut.Write("problem connecting"); }
 				SendPacket(&bsOut, packet->systemAddress);
 			}
 		}
@@ -136,19 +139,34 @@ bool NetworkManager::Update(){
 			std::cout << "Tile Count: " << FindLobby(FindClient(packet->systemAddress)->lobby).tiles.size() << "\n";
 		}
 			break;
+		case ID_READY_UP:
+		{
+			printf("Client Ready.\n");
+			FindClient(packet->systemAddress)->ReadyUp();
+		}
+			break;
 		default:
 			printf("Message with identifier %i has arrived.\n", packet->data[0]);
 			break;
 		}
 	}
+	for (int i = 0; i < lobbies.size(); i++){
+		lobbies[i].Update();
+		if (lobbies[i].ready && !lobbies[i].inGame){
+			RakNet::BitStream bsOut;
+			bsOut.Write((RakNet::MessageID)ID_START_GAME);
+			//send message to lobby
+			SendPacket(&bsOut, lobbies[i]);
+			lobbies[i].StartGame();
+		}
+	}
+
 	peer->DeallocatePacket(packet);
 
 	return _recieved;
 }
 
-bool NetworkManager::AddClient(){
-	bool success = false;
-
+int NetworkManager::AddClient(){
 	RakNet::RakString client_id, lobby_name;
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
@@ -157,12 +175,10 @@ bool NetworkManager::AddClient(){
 	//get lobby name
 	bsIn.Read(lobby_name);
 
-	bool create = true;
-
 	for (int i = 0; i < clients.size(); i++){
 		if (clients[i]->id == client_id.C_String()){
 			printf("connection attempt failed.\n");
-			return success;
+			return 2;
 		}
 	}
 
@@ -170,23 +186,26 @@ bool NetworkManager::AddClient(){
 
 	for (int i = 0; i < lobbies.size(); i++){
 		if (lobbies[i].name == lobby_name.C_String()){
-			lobbies[i].clients.push_back(newClient);
-			clients.push_back(newClient);
-			std::cout << client_id << " joined '" << lobbies[i].name << "'\n";
-			create = false;
-			success = true;
-			break;
+			if (lobbies[i].clients.size() < 4){
+				lobbies[i].clients.push_back(newClient);
+				clients.push_back(newClient);
+				std::cout << client_id << " joined '" << lobbies[i].name << "'\n";
+				return 1;
+			}
+			else{
+				std::cout << lobbies[i].name << " is full.\n";
+				delete(newClient);
+				return 3;
+			}
 		}
 	}
-	if (create){
-		lobbies.push_back(Lobby());
-		lobbies[lobbies.size() - 1].name = lobby_name.C_String();
-		lobbies[lobbies.size() - 1].clients.push_back(newClient);
-		clients.push_back(newClient);
-		success = true;
-		std::cout << client_id << " created '" << lobbies[lobbies.size() - 1].name << "'\n";
-	}
-	return success;
+	//lobby needs to be created
+	lobbies.push_back(Lobby());
+	lobbies[lobbies.size() - 1].name = lobby_name.C_String();
+	lobbies[lobbies.size() - 1].clients.push_back(newClient);
+	clients.push_back(newClient);
+	std::cout << client_id << " created '" << lobbies[lobbies.size() - 1].name << "'\n";
+	return 0;
 }
 void NetworkManager::RemoveClient(RakNet::SystemAddress _address){
 	if (FindClient(packet->systemAddress) == NULL){

@@ -179,8 +179,11 @@
     <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\VitaIncludes.cpp" />
     <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\AutopatcherPatchContext.h" />
@@ -337,7 +340,10 @@
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\WSAStartupSingleton.h" />
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\XBox360Includes.h" />
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.h" />
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="Lobby.h" />
     <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
