@@ -10,11 +10,11 @@ float t = 0.0f;
 int blue, soft_green, gold, orange, chrome;
 int tile_model;
 
-bool inGame = false;
+bool inGame = false, inLobby = false, isReady = false;
 
 //gui && networking 
 gui::GUIManager gManager = gui::GUIManager();
-int game_hud, menu;
+int game_hud, menu, lobby;
 
 NetworkManager nManager = NetworkManager();
 glm::vec3 server_pos;
@@ -79,6 +79,19 @@ void Game::LoadGUI(){
 	gManager.AddText(menu, "menu_message", 400, 375, " ", sf::Color(202, 33, 33, 255), "TF2.ttf", 40);
 	gManager.SetCentred("menu_message", true);
 
+	lobby = gManager.AddMenu();
+
+	gManager.AddButton(lobby, "ready_button", 500, 75, 400, 500, "Not Ready", sf::Color(32, 69, 137, 255), sf::Color(9, 43, 106, 255), sf::Color(2, 35, 95, 255), "TF2.ttf");
+	gManager.SetCentred("ready_button", true);
+	gManager.AddText(lobby, "client01", 400, (0 * 40) + 10, "", sf::Color::White, "TF2.ttf", 50);
+	gManager.SetCentred("client01", true);
+	gManager.AddText(lobby, "client02", 400, (1 * 40) + 10, "", sf::Color::White, "TF2.ttf", 50);
+	gManager.SetCentred("client02", true);
+	gManager.AddText(lobby, "client03", 400, (2 * 40) + 10, "", sf::Color::White, "TF2.ttf", 50);
+	gManager.SetCentred("client03", true);
+	gManager.AddText(lobby, "client04", 400, (3 * 40) + 10, "", sf::Color::White, "TF2.ttf", 50);
+	gManager.SetCentred("client04", true);
+
 	game_hud = gManager.AddMenu();
 
 	gManager.AddText(game_hud, "lobby_count", 400, 0, "0", sf::Color::Green, "TF2.ttf", 50);
@@ -122,16 +135,14 @@ void Game::Update(float _delta){
 void Game::Update(float _delta, sf::RenderWindow *_window){
 	Update(_delta);
 	nManager.Update(_delta);
+	std::string _message = nManager.GetServerMessage();
+	if (_message != ""){
+		gManager.SetText("menu_message", _message);
+	}
 	gManager.Update(_window, _delta);
 	sf::Event event;
 	switch (nManager.state){
 	case 0:
-		{
-			std::string _message = nManager.GetServerMessage();
-			if (_message != ""){
-				gManager.SetText("menu_message", _message);
-			}
-		}
 		while (_window->pollEvent(event)){
 			switch (event.type){
 			case sf::Event::Closed:
@@ -168,7 +179,49 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 		}
 		break;
 	case 1:
-		_window->setTitle(gManager.GetText("id_text_box") + " :: " + gManager.GetText("lobby_text_box"));
+		if (!inLobby){
+			_window->setTitle(gManager.GetText("id_text_box") + " :: " + gManager.GetText("lobby_text_box"));
+			gManager.BindMenu(lobby);
+			inLobby = true;
+		}
+		while (_window->pollEvent(event)){
+			switch (event.type){
+			case sf::Event::Closed:
+				//try to disconnect
+				nManager.Disconnect();
+				isRunning = false;
+				break;
+			case sf::Event::MouseButtonReleased:
+				if (gManager.ButtonClicked("ready_button")){
+					nManager.ReadyUp();
+					if (!isReady){ 
+						isReady = true;
+						gManager.SetText("ready_button", "Ready");
+					}
+					else{
+						isReady = false;
+						gManager.SetText("ready_button", "Not Ready");
+					}
+				}
+				break;
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Escape){
+					nManager.Disconnect();
+					isRunning = false;
+				}
+				break;
+			}
+		}
+		if (nManager.UpdateClients()){
+			for (int i = 0; i < 4; i++){
+				if (i < players->size()){
+					gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID());
+				}
+				else{
+					gManager.SetText("client0" + std::to_string(i + 1), "*empty*");
+				}
+			}
+		}
 		break;
 	case 2:
 		if (!inGame){

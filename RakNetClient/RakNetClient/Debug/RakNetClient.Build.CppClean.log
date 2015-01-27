@@ -15,6 +15,7 @@ c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetcl
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\vitaincludes.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\wsastartupsingleton.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\_findfirst.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\game.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\main.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\networkmanager.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\player.obj
@@ -114,6 +115,12 @@ c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetcl
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\directorydeltatransfer.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\dr_sha1.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\ds_bytepool.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\debug\raknetclient.ilk
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\debug\raknetclient.exe
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\debug\raknetclient.pdb
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\cl.command.1.tlog
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\cl.read.1.tlog
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\cl.write.1.tlog
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\link.command.1.tlog
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\link.read.1.tlog
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\debug\raknetclient.tlog\link.write.1.tlog

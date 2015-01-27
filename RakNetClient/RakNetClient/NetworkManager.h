@@ -24,7 +24,9 @@ enum GameMessages{
 	ID_LOBBY_COUNT = ID_USER_PACKET_ENUM + 3,
 	ID_REMOVE_CLIENT = ID_USER_PACKET_ENUM + 4,
 	ID_CLIENT_POSITION = ID_USER_PACKET_ENUM + 5,
-	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6
+	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6,
+	ID_START_GAME = ID_USER_PACKET_ENUM + 7,
+	ID_READY_UP = ID_USER_PACKET_ENUM + 8
 };
 
 class NetworkManager{
@@ -55,6 +57,8 @@ public:
 	std::string GetServerMessage();
 
 	GameState state;
+
+	void ReadyUp();
 private:
 	bool connected;
 	bool update_clients, update_tiles;
@@ -73,7 +77,5 @@ private:
 
 	std::vector<std::string> chat_log;
 	std::vector<std::string> new_messages;
-
-	float delay;
 };
 

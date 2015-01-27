@@ -115,6 +115,12 @@ std::string NetworkManager::GetServerMessage(){
 	return _m;
 }
 
+void NetworkManager::ReadyUp(){
+	RakNet::BitStream bsOut;
+	bsOut.Write((RakNet::MessageID)ID_READY_UP);
+	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+}
+
 void NetworkManager::Update(float _delta){
 	packet = peer->Receive();
 	switch (state){
@@ -140,13 +146,18 @@ void NetworkManager::Update(float _delta){
 				bsIn.Read(rs);
 				if (strcmp(rs.C_String(), "success") == 0){
 					state = IN_LOBBY;
-					delay = 1.0f;
+					connected = true;
 					printf("finally connected\n");
 					server_message = "Connection Successful.";
 				}
 				else if (strcmp(rs.C_String(), "id invalid") == 0){
 					printf("invalid id.\n");
 					server_message = "Invalid ID.";
+					Disconnect();
+				}
+				else if (strcmp(rs.C_String(), "lobby full") == 0){
+					printf("lobby full.\n");
+					server_message = "Lobby Full.";
 					Disconnect();
 				}
 				else{
@@ -163,11 +174,59 @@ void NetworkManager::Update(float _delta){
 		}
 		break;
 	case IN_LOBBY:
-		delay -= _delta;
-		if (delay < 0){
-			connected = true;
-			state = IN_GAME;
-			delay = 1.0f;
+		if (packet){
+			switch (packet->data[0]){
+			case ID_START_GAME:
+				state = IN_GAME;
+				break;
+			case ID_LOBBY_COUNT:
+			{
+				RakNet::RakString rs;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				while (bsIn.GetNumberOfUnreadBits() > 0){
+					bool new_client = true;
+					bsIn.Read(rs);
+					std::string _c = rs.C_String();
+					for (int i = 0; i < clients.size(); i++){
+						if (clients[i].ID() == _c){
+							float x, y, z;
+							bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
+							clients[i].SetPosition(glm::vec3(x, y, z));
+							new_client = false;
+							break;
+						}
+					}
+					if (new_client){
+						float x, y, z;
+						bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
+						clients.push_back(Player(_c, glm::vec3(x, y, z)));
+					}
+				}
+				lobby_count = clients.size();
+				update_clients = true;
+			}
+				break;
+			case ID_REMOVE_CLIENT:
+			{
+				RakNet::RakString rs;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(rs);
+				for (std::vector<Player>::iterator iter = clients.begin(); iter != clients.end(); ++iter){
+					if (iter->ID() == rs.C_String()){
+						clients.erase(iter);
+						break;
+					}
+				}
+				lobby_count = clients.size();
+				update_clients = true;
+			}
+				break;
+			default:
+				printf("Message with identifier %i has arrived.\n", packet->data[0]);
+				break;
+			}
 		}
 		break;
 	case IN_GAME:
