@@ -49,7 +49,7 @@ void NetworkManager::Disconnect(){
 }
 void NetworkManager::UpdateServer(glm::vec3 _pos){
 	RakNet::BitStream bsOut;
-	bsOut.Write((RakNet::MessageID)ID_CLIENT_POSITION);
+	bsOut.Write((RakNet::MessageID)ID_CLIENT_DATA);
 	//send packet
 	bsOut.Write(_pos.x);
 	bsOut.Write(_pos.y);
@@ -120,6 +120,40 @@ void NetworkManager::ReadyUp(){
 	bsOut.Write((RakNet::MessageID)ID_READY_UP);
 	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 }
+void NetworkManager::UpdateClientData(){
+	RakNet::RakString rs;
+	RakNet::BitStream bsIn(packet->data, packet->length, false);
+	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+	while (bsIn.GetNumberOfUnreadBits() > 0){
+		bool new_client = true;
+		bsIn.Read(rs);
+		std::string _c = rs.C_String();
+		int _ready, _turn;
+		bsIn.Read(_ready);
+		bsIn.Read(_turn);
+		float x, y, z;
+		bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
+		for (int i = 0; i < clients.size(); i++){
+			if (clients[i].ID() == _c){
+				clients[i].SetReady(_ready);
+				clients[i].SetTurn(_turn);
+				clients[i].SetPosition(glm::vec3(x, y, z));
+				if (clients[i].ID() == id){
+					is_turn = clients[i].IsTurn();
+				}
+				new_client = false;
+				break;
+			}
+		}
+		if (new_client){
+			std::cout << "new client added***\n";
+			clients.push_back(Player(_c, glm::vec3(x, y, z)));
+			clients[clients.size() - 1].SetReady(_ready);
+		}
+	}
+	lobby_count = clients.size();
+	update_clients = true;
+}
 
 void NetworkManager::Update(float _delta){
 	packet = peer->Receive();
@@ -181,30 +215,7 @@ void NetworkManager::Update(float _delta){
 				break;
 			case ID_LOBBY_COUNT:
 			{
-				RakNet::RakString rs;
-				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-				while (bsIn.GetNumberOfUnreadBits() > 0){
-					bool new_client = true;
-					bsIn.Read(rs);
-					std::string _c = rs.C_String();
-					for (int i = 0; i < clients.size(); i++){
-						if (clients[i].ID() == _c){
-							float x, y, z;
-							bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
-							clients[i].SetPosition(glm::vec3(x, y, z));
-							new_client = false;
-							break;
-						}
-					}
-					if (new_client){
-						float x, y, z;
-						bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
-						clients.push_back(Player(_c, glm::vec3(x, y, z)));
-					}
-				}
-				lobby_count = clients.size();
-				update_clients = true;
+				UpdateClientData();
 			}
 				break;
 			case ID_REMOVE_CLIENT:
@@ -271,30 +282,7 @@ void NetworkManager::Update(float _delta){
 				break;
 			case ID_LOBBY_COUNT:
 			{
-				RakNet::RakString rs;
-				RakNet::BitStream bsIn(packet->data, packet->length, false);
-				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-				while (bsIn.GetNumberOfUnreadBits() > 0){
-					bool new_client = true;
-					bsIn.Read(rs);
-					std::string _c = rs.C_String();
-					for (int i = 0; i < clients.size(); i++){
-						if (clients[i].ID() == _c){
-							float x, y, z;
-							bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
-							clients[i].SetPosition(glm::vec3(x, y, z));
-							new_client = false;
-							break;
-						}
-					}
-					if (new_client){
-						float x, y, z;
-						bsIn.Read(x); bsIn.Read(y); bsIn.Read(z);
-						clients.push_back(Player(_c, glm::vec3(x, y, z)));
-					}
-				}
-				lobby_count = clients.size();
-				update_clients = true;
+				UpdateClientData();
 			}
 				break;
 			case ID_REMOVE_CLIENT:

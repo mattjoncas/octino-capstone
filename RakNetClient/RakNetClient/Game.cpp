@@ -4,8 +4,10 @@ mor::GameObject *cube;
 mor::Camera *camera;
 mor::Light *white_light;
 std::vector<mor::GameObject*> tiles;
+mor::GameObject *tile_cursor;
 
 float t = 0.0f;
+float tile_rotation = 0.0f;
 //materials
 int blue, soft_green, gold, orange, chrome;
 int tile_model;
@@ -30,14 +32,14 @@ Game::~Game(){
 	delete(camera);
 
 	//delete(players);
+	delete(tile_cursor);
 }
 
 void Game::Load(){
 	srand(time(0));
 
 	camera = new mor::Camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), SCREEN_WIDTH, SCREEN_HEIGHT, false);
-
-	white_light = new mor::Light(glm::vec4(0.0, 0.0, -20.0, 0.0), glm::vec4(0.05, 0.05, 0.05, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), 200.0f, 1.0f);
+	white_light = new mor::Light(glm::vec4(0.0, 0.0, -20.0, 0.0), glm::vec4(0.05, 0.05, 0.05, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), 300.0f, 1.0f);
 
 	renderer.SetCamera(camera);
 	renderer.AddLight(white_light);
@@ -48,15 +50,17 @@ void Game::Load(){
 	orange = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(1.0, 0.368, 0.029, 1.0), glm::vec4(0.638, 1.0, 0.2, 1.0), 50.0f);
 	chrome = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.05, 0.05, 0.05, 1.0), glm::vec4(0.5, 0.0, 0.0, 1.0), 1.0f);
 
-	cube = new mor::GameObject();
-	cube->model = renderer.LoadModel("cube");
-	cube->Init(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(glm::radians(0.0f), 0.0f, 0.0f), glm::vec3(70.0f, 50.0f, 1.0f));
-	cube->material = soft_green;
+	cube = new mor::GameObject(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(glm::radians(0.0f)), glm::vec3(70.0f, 50.0f, 1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+	cube->Init(renderer.LoadModel("cube"), NULL, NULL, soft_green);
 	cube->bounding_shape = new AABox(cube->position, cube->scale.x, cube->scale.y, cube->scale.z);
 
 	objects.push_back(cube);
 
 	tile_model = renderer.LoadModel("tile");
+
+	tile_cursor = new mor::GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+	tile_cursor->Init(tile_model, renderer.LoadShader("shaders/tile_cursor_vert.glsl", "shaders/tile_cursor_frag.glsl"), NULL, NULL);
+	tile_cursor->SetActive(false);
 
 	LoadGUI();
 
@@ -71,7 +75,7 @@ void Game::LoadGUI(){
 	gManager.SetCentred("id_text_box", true);
 	gManager.AddText(menu, "lobby_text", 400, 150, "Enter Lobby to Create/Join", sf::Color::White, "TF2.ttf", 50);
 	gManager.SetCentred("lobby_text", true);
-	gManager.AddTextBox(menu, "lobby_text_box", 420, 80, 400, 230, "", sf::Color(9, 43, 106, 255), "TF2.ttf");
+	gManager.AddTextBox(menu, "lobby_text_box", 420, 80, 400, 220, "", sf::Color(9, 43, 106, 255), "TF2.ttf");
 	gManager.SetCentred("lobby_text_box", true);
 	gManager.AddButton(menu, "connect_button", 500, 75, 400, 500, "Connect", sf::Color(32, 69, 137, 255), sf::Color(9, 43, 106, 255), sf::Color(2, 35, 95, 255), "TF2.ttf");
 	gManager.SetCentred("connect_button", true);
@@ -81,7 +85,7 @@ void Game::LoadGUI(){
 
 	lobby = gManager.AddMenu();
 
-	gManager.AddButton(lobby, "ready_button", 500, 75, 400, 500, "Not Ready", sf::Color(32, 69, 137, 255), sf::Color(9, 43, 106, 255), sf::Color(2, 35, 95, 255), "TF2.ttf");
+	gManager.AddButton(lobby, "ready_button", 500, 75, 400, 500, "Ready Up", sf::Color(32, 69, 137, 255), sf::Color(9, 43, 106, 255), sf::Color(2, 35, 95, 255), "TF2.ttf");
 	gManager.SetCentred("ready_button", true);
 	gManager.AddText(lobby, "client01", 400, (0 * 40) + 10, "", sf::Color::White, "TF2.ttf", 50);
 	gManager.SetCentred("client01", true);
@@ -106,17 +110,29 @@ void Game::LoadGUI(){
 }
 
 void Game::Render(){
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	renderer.ShadowMapPass(tiles);
+	renderer.ShadowMapPass(objects);
 	renderer.Render(objects);
-
 	renderer.Render(tiles);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//render tile cursor
+	renderer.Render(tile_cursor);
+	glDisable(GL_BLEND);
 }
 void Game::Render(sf::RenderWindow *_window){
-	Render();
-
-	renderer.BindShader(-1);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	switch (nManager.state){
+	case 0:
+	case 1:
+		//in menu
+		break;
+	default:
+		//in game
+		Render();
+		renderer.BindShader(-1);
+		break;
+	}
 
 	gManager.Render(_window);
 }
@@ -127,6 +143,9 @@ void Game::Update(float _delta){
 
 		for (int i = 0; i < objects.size(); i++){
 			objects[i]->Update(_delta);
+		}
+		for (int i = 0; i < tiles.size(); i++){
+			tiles[i]->Update(_delta);
 		}
 
 		white_light->SetPosition(glm::vec4(camera->pos, 1.0f));
@@ -194,14 +213,6 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			case sf::Event::MouseButtonReleased:
 				if (gManager.ButtonClicked("ready_button")){
 					nManager.ReadyUp();
-					if (!isReady){ 
-						isReady = true;
-						gManager.SetText("ready_button", "Ready");
-					}
-					else{
-						isReady = false;
-						gManager.SetText("ready_button", "Not Ready");
-					}
 				}
 				break;
 			case sf::Event::KeyPressed:
@@ -215,7 +226,14 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 		if (nManager.UpdateClients()){
 			for (int i = 0; i < 4; i++){
 				if (i < players->size()){
-					gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID());
+					std::string _r;
+					if (players->at(i).IsReady()){
+						_r = ": Ready";
+					}
+					else{
+						_r = ": Not Ready";
+					}
+					gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID() + _r);
 				}
 				else{
 					gManager.SetText("client0" + std::to_string(i + 1), "*empty*");
@@ -250,9 +268,24 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 				if (event.mouseButton.button == sf::Mouse::Left && !gManager.CursorOverGUI()){
 					//spawn tile to server
 					glm::vec3 h = Raycast(event.mouseButton.x, event.mouseButton.y);
-					if (h != glm::vec3(-1, -1, -1)){
+					if (h != glm::vec3(-1, -1, -1) && nManager.is_turn){
 						h = glm::floor(h * (1.0f / 0.5f) + 0.5f) / (1.0f / 0.5f);
-						nManager.SendNewTile(h, glm::radians(0.0f));
+						nManager.SendNewTile(h, glm::radians(tile_rotation));
+						tile_cursor->SetActive(false);
+					}
+				}
+				break;
+			case sf::Event::MouseMoved:
+				if (!gManager.CursorOverGUI()){
+					glm::vec3 h = Raycast(event.mouseMove.x, event.mouseMove.y);
+					if (h != glm::vec3(-1, -1, -1) && nManager.is_turn){
+						h = glm::floor(h * (1.0f / 0.5f) + 0.5f) / (1.0f / 0.5f);
+						tile_cursor->position = h;
+						tile_cursor->SetRotation(glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)));
+						tile_cursor->SetActive(true);
+					}
+					else{
+						tile_cursor->SetActive(false);
 					}
 				}
 				break;
@@ -283,7 +316,12 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 		if (nManager.UpdateClients()){
 			for (int i = 0; i < 4; i++){
 				if (i < players->size()){
-					gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID());
+					if (players->at(i).IsTurn()){
+						gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID() + " <-");
+					}
+					else{
+						gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID());
+					}
 				}
 				else{
 					gManager.SetText("client0" + std::to_string(i + 1), "*empty*");
@@ -305,12 +343,6 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 }
 
 void Game::Input(){
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)){
-		renderer.SetDebug(true);
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)){
-		renderer.SetDebug(false);
-	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 		camera->pos.y += 0.1f;
@@ -337,6 +369,13 @@ void Game::SFInput(sf::Keyboard::Key _key){
 	}
 	if (_key == sf::Keyboard::I){
 		renderer.SetDebug(false);
+	}
+	if (_key == sf::Keyboard::R){
+		tile_rotation += 90.0f;
+		if (tile_rotation >= 360.0f){
+			tile_rotation -= 360.0f;
+		}
+		tile_cursor->SetRotation(glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)));
 	}
 	if (_key == sf::Keyboard::W){
 		camera->pos.y += 0.2f;
@@ -382,6 +421,7 @@ glm::vec3 Game::Raycast(float mouseX, float mouseY){
 	if (tiles.size() > 0){
 		float dist = 100.0f;
 		glm::vec3 final = glm::vec3(-1);
+		float rot = 0.0f;
 		glm::vec3 p;
 		int final_tile, final_adjacent;
 		for (int i = 0; i < tiles.size(); i++){
@@ -393,9 +433,16 @@ glm::vec3 Game::Raycast(float mouseX, float mouseY){
 						dist = glm::distance(r.Hit(), p);
 						final = p;
 						final_tile = i; final_adjacent = a;
+						if (a == 1 || a == 3 || a == 5 || a == 7){
+							rot = glm::degrees(t->rotation.z) + 180.0f;
+						}
 					}
 				}
 			}
+		}
+		if (rot > 0){
+			tile_rotation = rot;
+			if (tile_rotation >= 360.0f){ tile_rotation -= 360.0f; };
 		}
 		return final;
 	}
@@ -407,15 +454,12 @@ void Game::AddTiles(std::vector<Tile*> _tiles){
 		tiles.push_back(_tiles[i]);
 		tiles[tiles.size() - 1]->model = tile_model;
 		tiles[tiles.size() - 1]->bounding_shape = new AABox(tiles[tiles.size() - 1]->position, 2.0f, 2.0f, 0.5f);
+		//Tile *t = dynamic_cast<Tile*>(tiles[tiles.size() - 1]);
 		if (tiles.size() > 1){
 			Tile *t = dynamic_cast<Tile*>(tiles[tiles.size() - 1]);
-			//NOT WORKING **VVV**
-			for (int i = 0; i < tiles.size() - 1; i++){
-				printf("x: %f, y: %f, z: %f\n", tiles[i]->position.x, tiles[i]->position.y, tiles[i]->position.z);
-				printf("\n");
+			for (int x = 0; x < tiles.size() - 1; x++){
 				for (int a = 0; a < 8; a++){
-					printf("x: %f, y: %f, z: %f\n", t->adjacent_tiles[a].pos.x, t->adjacent_tiles[a].pos.y, t->adjacent_tiles[a].pos.z);
-					if (t->adjacent_tiles[a].pos == tiles[i]->position){
+					if (t->adjacent_tiles[a].pos == tiles[x]->position){
 						t->adjacent_tiles[a].filled = true;
 
 						int u = a + 1, d = a - 1;
@@ -426,7 +470,7 @@ void Game::AddTiles(std::vector<Tile*> _tiles){
 						t->adjacent_tiles[d].filled = true;
 						
 						//update surrounding tiles
-						Tile *_tile = dynamic_cast<Tile*>(tiles[i]);
+						Tile *_tile = dynamic_cast<Tile*>(tiles[x]);
 						int ta = a + 4;
 						if (ta > 7){
 							ta -= 8;
@@ -442,15 +486,9 @@ void Game::AddTiles(std::vector<Tile*> _tiles){
 					}
 				}
 			}
-			printf("***\n");
-			for (int a = 0; a < 8; a++){
-				if (t->adjacent_tiles[a].filled){
-					printf("filled\n");
-				}
-				else{
-					printf("not filled\n");
-				}
-			}
 		}
+	}
+	if (tiles.size() > 1){
+		dynamic_cast<Tile*>(tiles[tiles.size() - 1])->Drop();
 	}
 }

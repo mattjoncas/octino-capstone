@@ -18,6 +18,12 @@ public:
 	Tile(glm::vec3 _position, glm::vec3 _rotation);
 	~Tile();
 
+	void Update(float _delta) override;
+
+	void Drop();
+
 	Adjacent adjacent_tiles[8];
+private:
+	//bool placed;
 };
 

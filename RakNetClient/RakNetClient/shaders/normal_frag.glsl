@@ -18,7 +18,7 @@ uniform MaterialUniforms {
 uniform int num_lights;
 
 struct Light {
-    vec4 light_position, light_ambient, light_diffuse, light_specular;
+    vec4 light_position, light_direction, light_ambient, light_diffuse, light_specular;
     float light_size, light_drop_off;
 };
 

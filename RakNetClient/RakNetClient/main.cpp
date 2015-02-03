@@ -17,7 +17,8 @@ int main(){
 	Game game;
 	game.Load();
 
-	glClearColor(0.883f, 0.734f, 0.48f, 1.0);
+	//glClearColor(0.883f, 0.734f, 0.48f, 1.0);
+	glClearColor(0.05f, 0.05f, 0.05f, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

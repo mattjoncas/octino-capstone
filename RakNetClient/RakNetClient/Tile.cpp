@@ -20,3 +20,18 @@ Tile::Tile(glm::vec3 _position, glm::vec3 _rotation){
 Tile::~Tile(){
 
 }
+
+void Tile::Update(float _delta){
+	if (position.z <= -49.0f && acceleration != glm::vec3(0.0f)){
+		position.z == -49.0f;
+		acceleration = glm::vec3(0.0f);
+		velocity = glm::vec3(0.0f);
+	}
+	
+	GameObject::Update(_delta);
+}
+void Tile::Drop(){
+	position.z += 25.0f;
+	acceleration.z = -9.8f;
+	velocity.z = -25.0f;
+}

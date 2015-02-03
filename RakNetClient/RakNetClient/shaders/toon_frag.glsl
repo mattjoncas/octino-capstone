@@ -18,7 +18,7 @@ uniform MaterialUniforms {
 uniform int num_lights;
 
 struct Light {
-    vec4 light_position, light_ambient, light_diffuse, light_specular;
+    vec4 light_position, light_direction, light_ambient, light_diffuse, light_specular;
     float light_size, light_drop_off;
 };
 
@@ -34,10 +34,14 @@ void main(){
     vec4 specular_product = material_specular * lights[0].light_specular;
     vec4 ambient_product = material_ambient * lights[0].light_ambient;
 
-    vec4 texColor = texture(tex, Texcoord);
-
-    vec3 lightVectorWorld = normalize((lights[0].light_position).xyz - vertexWorld); //<-- this works when an object is rotated
-     //diffuse brightness
+    vec3 lightVectorWorld = vec3(0.0);
+    if (lights[0].light_direction.xyz == vec3(0.0)){
+      lightVectorWorld = normalize((lights[0].light_position).xyz - vertexWorld);
+    }
+    else{
+      lightVectorWorld = normalize(lights[0].light_direction.xyz);
+    }
+    //diffuse brightness
     float Kd = dot(lightVectorWorld, normalize(normalWorld));
     vec4 diffuse = Kd * diffuse_product;
 
@@ -58,7 +62,7 @@ void main(){
 
     // Simple Silhouette
     float sil = max(dot(normalWorld, eyeVectorWorld), 0.0);
-    if (sil < 0.15){ 
+    if (sil < 0.15){
         fColor = vec4(0.0, 0.0, 0.0, 1.0);
     }
     else {

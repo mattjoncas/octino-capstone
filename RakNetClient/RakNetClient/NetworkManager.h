@@ -23,7 +23,7 @@ enum GameMessages{
 	ID_INIT_MESSAGE_1 = ID_USER_PACKET_ENUM + 2,
 	ID_LOBBY_COUNT = ID_USER_PACKET_ENUM + 3,
 	ID_REMOVE_CLIENT = ID_USER_PACKET_ENUM + 4,
-	ID_CLIENT_POSITION = ID_USER_PACKET_ENUM + 5,
+	ID_CLIENT_DATA = ID_USER_PACKET_ENUM + 5,
 	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6,
 	ID_START_GAME = ID_USER_PACKET_ENUM + 7,
 	ID_READY_UP = ID_USER_PACKET_ENUM + 8
@@ -51,6 +51,7 @@ public:
 	int GetLobbyCount();
 
 	std::string id, lobby;
+	bool is_turn;
 
 	void UpdateServer(glm::vec3 _pos);
 
@@ -77,5 +78,7 @@ private:
 
 	std::vector<std::string> chat_log;
 	std::vector<std::string> new_messages;
+
+	void UpdateClientData();
 };
 

@@ -19,7 +19,7 @@ uniform MaterialUniforms {
 uniform int num_lights;
 
 struct Light {
-    vec4 light_position, light_ambient, light_diffuse, light_specular;
+    vec4 light_position, light_direction, light_ambient, light_diffuse, light_specular;
     float light_size, light_drop_off;
 };
 
@@ -48,22 +48,36 @@ void sampleShadowMap(in vec3 baseDirection, in vec3 baseOffset, in float curDist
 
 
 void main(){
-    //vec4 texColor = texture(tex, Texcoord);
-
     vec3 lcolor = vec3(0.0);
     for (int i = 0; i < num_lights; i++){
         vec4 diffuse_product = material_diffuse * lights[i].light_diffuse;
         vec4 specular_product = material_specular * lights[i].light_specular;
         vec4 ambient_product = material_ambient * lights[i].light_ambient;
         
-        vec3 lightVectorWorld = normalize((lights[i].light_position).xyz - vertexWorld); //<-- this works when an object is rotated
+        float attenuation = 1.0f;
+        float shadowFactor = 1.0f;
+        vec3 lightVectorWorld;
+        //point light
+        if (lights[i].light_direction.xyz == vec3(0.0)){
+            lightVectorWorld = normalize((lights[i].light_position).xyz - vertexWorld); //<-- this works when an object is rotated
+            float distanceToLight = length((lights[i].light_position).xyz - vertexWorld);
+            attenuation =  pow(max(0.0, 1.0 - (distanceToLight / lights[i].light_size)), lights[i].light_drop_off + 1.0);
 
-        //for science
-        float distanceToLight = length((lights[i].light_position).xyz - vertexWorld);
+            //shadow mapping if is point light
+            float currentDistanceToLight = (distanceToLight - 0.1) / (200.0 - 0.1);
+            currentDistanceToLight = clamp(currentDistanceToLight, 0.0, 1.0);
+            vec3 fromLightToFragment = lightVectorWorld;
+            // sample shadow cube map
+            if (i == 0){
+                shadowFactor = texture(u_shadowCubeMap, vec4(-fromLightToFragment, currentDistanceToLight));
+            }
+        }
+        //directional light
+        else{
+            lightVectorWorld = normalize(lights[i].light_direction.xyz);
+        }
 
-        float attenuation =  pow(max(0.0, 1.0 - (distanceToLight / lights[i].light_size)), lights[i].light_drop_off + 1.0);
-
-         //diffuse brightness
+        //diffuse brightness
         float Kd = dot(lightVectorWorld, normalize(normalWorld));
         vec4 diffuse = Kd * diffuse_product;
 
@@ -78,16 +92,6 @@ void main(){
         // Compute terms in the illumination equation
         vec4 ambient = ambient_product;
 
-
-        //shadow testing
-        float currentDistanceToLight = (distanceToLight - 0.1) / (200.0 - 0.1);
-        currentDistanceToLight = clamp(currentDistanceToLight, 0.0, 1.0);
-        vec3 fromLightToFragment = lightVectorWorld;
-
-        // sample shadow cube map
-        float referenceDistanceToLight = texture(u_shadowCubeMap, vec4(-fromLightToFragment, currentDistanceToLight));
-
-        float shadowFactor = referenceDistanceToLight;
         /*
         float numSamples = 0;
         float sizeOfCubeTex = 2048;
