@@ -15,7 +15,7 @@ public:
 
 	Client(RakNet::SystemAddress _address, std::string _id, std::string _lobby);
 
-	bool ready;
+	int ready, is_turn;
 
 	void ReadyUp();
 };

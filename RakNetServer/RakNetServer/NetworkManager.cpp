@@ -98,7 +98,7 @@ bool NetworkManager::Update(){
 				SendPacket(&bsOut, packet->systemAddress);
 
 				//update client lobby counts
-				UpdateClientCounts(FindLobby(FindClient(packet->systemAddress)->lobby));
+				UpdateClients(FindLobby(FindClient(packet->systemAddress)->lobby));
 				//send tiles to newest client
 				SendTiles(clients[clients.size() - 1]);
 			}
@@ -107,14 +107,15 @@ bool NetworkManager::Update(){
 				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
 				if (_result == 2){ bsOut.Write("id invalid"); }
 				else if (_result == 3){ bsOut.Write("lobby full"); }
+				else if (_result == 4){ bsOut.Write("lobby in game"); }
 				else { bsOut.Write("problem connecting"); }
 				SendPacket(&bsOut, packet->systemAddress);
 			}
 		}
 			break;
-		case ID_CLIENT_POSITION:
+		case ID_CLIENT_DATA:
 		{
-			UpdateClientPosition(packet->systemAddress);
+			UpdateClient(packet->systemAddress);
 		}
 			break;
 		case ID_NEW_TILE:
@@ -127,12 +128,15 @@ bool NetworkManager::Update(){
 			bsIn.Read(y);
 			bsIn.Read(z);
 			bsIn.Read(r);
+			int v;
+			bsIn.Read(v);
 
 			for (int i = 0; i < lobbies.size(); i++){
 				if (lobbies[i].name == FindClient(packet->systemAddress)->lobby){
-					lobbies[i].tiles.push_back(Tile(x, y, z, r, FindClient(packet->systemAddress)->id, 0));
+					lobbies[i].AddTile(Tile(x, y, z, r, FindClient(packet->systemAddress)->id, v));
 					//send newest tile to all clients
 					SendTile(lobbies[i]);
+					break;
 				}
 			}
 
@@ -143,6 +147,18 @@ bool NetworkManager::Update(){
 		{
 			printf("Client Ready.\n");
 			FindClient(packet->systemAddress)->ReadyUp();
+			UpdateClients(FindLobby(FindClient(packet->systemAddress)->lobby));
+		}
+			break;
+		case ID_END_TURN:
+		{
+			for (int i = 0; i < lobbies.size(); i++){
+				if (lobbies[i].name == FindClient(packet->systemAddress)->lobby){
+					lobbies[i].IncrementTurn();
+					UpdateClients(lobbies[i]);
+					break;
+				}
+			}
 		}
 			break;
 		default:
@@ -158,6 +174,7 @@ bool NetworkManager::Update(){
 			//send message to lobby
 			SendPacket(&bsOut, lobbies[i]);
 			lobbies[i].StartGame();
+			UpdateClients(lobbies[i]);
 		}
 	}
 
@@ -186,6 +203,11 @@ int NetworkManager::AddClient(){
 
 	for (int i = 0; i < lobbies.size(); i++){
 		if (lobbies[i].name == lobby_name.C_String()){
+			if (lobbies[i].inGame){
+				std::cout << "Cannot join " << lobbies[i].name << ", in game.\n";
+				delete(newClient);
+				return 4;
+			}
 			if (lobbies[i].clients.size() < 4){
 				lobbies[i].clients.push_back(newClient);
 				clients.push_back(newClient);
@@ -218,9 +240,13 @@ void NetworkManager::RemoveClient(RakNet::SystemAddress _address){
 			//remove client from lobby first
 			for (std::vector<Client*>::iterator iter = lobbies[i].clients.begin(); iter != lobbies[i].clients.end(); ++iter){
 				if ((*iter)->address == FindClient(packet->systemAddress)->address){
+					if ((*iter)->is_turn){
+						lobbies[i].IncrementTurn();
+					}
 					lobbies[i].clients.erase(iter);
 					//if lobby is empty remove it
 					if (lobbies[i].clients.size() < 1){
+						lobbies[i].clients.clear();
 						lobbies.erase(lobbies.begin() + i);
 						_update = false;
 					}
@@ -230,7 +256,7 @@ void NetworkManager::RemoveClient(RakNet::SystemAddress _address){
 			}
 			//update client lobby counts
 			if (_update){
-				UpdateClientCounts(lobbies[i]);
+				UpdateClients(lobbies[i]);
 			}
 		}
 	}
@@ -252,26 +278,29 @@ Client* NetworkManager::FindClient(RakNet::SystemAddress _address){
 		}
 	}
 	return NULL;
-}Lobby NetworkManager::FindLobby(std::string _name){
+}
+Lobby NetworkManager::FindLobby(std::string _name){
 	for (int i = 0; i < lobbies.size(); i++){
 		if (_name == lobbies[i].name){
 			return lobbies[i];
 		}
 	}
 }
-void NetworkManager::UpdateClientCounts(Lobby _lobby){
+void NetworkManager::UpdateClients(Lobby _lobby){
 	RakNet::BitStream bsOut;
 	bsOut.Write((RakNet::MessageID)ID_LOBBY_COUNT);
 	//get client names
 	for (int c = 0; c < _lobby.clients.size(); c++){
 		bsOut.Write(_lobby.clients[c]->id.c_str());
+		bsOut.Write(_lobby.clients[c]->ready);
+		bsOut.Write(_lobby.clients[c]->is_turn);
 		bsOut.Write(_lobby.clients[c]->x);
 		bsOut.Write(_lobby.clients[c]->y);
 		bsOut.Write(_lobby.clients[c]->z);
 	}
 	SendPacket(&bsOut, _lobby);
 }
-void NetworkManager::UpdateClientPosition(RakNet::SystemAddress _address){
+void NetworkManager::UpdateClient(RakNet::SystemAddress _address){
 	RakNet::RakString rs;
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
@@ -285,7 +314,7 @@ void NetworkManager::UpdateClientPosition(RakNet::SystemAddress _address){
 	//z
 	bsIn.Read(n);
 	FindClient(_address)->z = n;
-	UpdateClientCounts(FindLobby(FindClient(_address)->lobby));
+	UpdateClients(FindLobby(FindClient(_address)->lobby));
 }
 
 void NetworkManager::SendPacket(RakNet::BitStream *_data, RakNet::SystemAddress _address){
@@ -309,6 +338,8 @@ void NetworkManager::SendTiles(Lobby _lobby){
 		bsOut.Write(_lobby.tiles[c].x);
 		bsOut.Write(_lobby.tiles[c].y);
 		bsOut.Write(_lobby.tiles[c].z);
+		bsOut.Write(_lobby.tiles[c].rotation);
+		bsOut.Write(_lobby.tiles[c].value);
 	}
 	SendPacket(&bsOut, _lobby);
 }
@@ -323,6 +354,8 @@ void NetworkManager::SendTiles(Client *_client){
 		bsOut.Write(_lobby.tiles[c].x);
 		bsOut.Write(_lobby.tiles[c].y);
 		bsOut.Write(_lobby.tiles[c].z);
+		bsOut.Write(_lobby.tiles[c].rotation);
+		bsOut.Write(_lobby.tiles[c].value);
 	}
 	SendPacket(&bsOut, _client);
 }
@@ -333,5 +366,6 @@ void NetworkManager::SendTile(Lobby _lobby){
 	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].y);
 	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].z);
 	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].rotation);
+	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].value);
 	SendPacket(&bsOut, _lobby);
 }

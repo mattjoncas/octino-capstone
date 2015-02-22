@@ -20,5 +20,9 @@ public:
 
 	void Update();
 	void StartGame();
+
+	void IncrementTurn();
+
+	void AddTile(Tile _new_tile);
 };
 

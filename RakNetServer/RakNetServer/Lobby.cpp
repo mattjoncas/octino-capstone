@@ -26,4 +26,25 @@ void Lobby::StartGame(){
 	tiles.clear();
 
 	inGame = true;
+
+	clients[0]->is_turn = 1;
+}
+
+void Lobby::IncrementTurn(){
+	for (int i = 0; i < clients.size(); i++){
+		if (clients[i]->is_turn){
+			clients[i]->is_turn = false;
+			if (i < clients.size() - 1){
+				clients[i + 1]->is_turn = true;
+			}
+			else{
+				clients[0]->is_turn = true;
+			}
+			break;
+		}
+	}
+}
+
+void Lobby::AddTile(Tile _new_tile){
+	tiles.push_back(_new_tile);
 }

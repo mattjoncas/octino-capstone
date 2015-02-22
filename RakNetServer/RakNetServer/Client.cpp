@@ -12,7 +12,8 @@ Client::Client(RakNet::SystemAddress _address, std::string _id, std::string _lob
 	y = 0;
 	z = 0;
 
-	ready = false;
+	ready = 0;
+	is_turn = 0;
 }
 
 Client::~Client(){

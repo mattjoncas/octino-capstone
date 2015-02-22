@@ -19,7 +19,6 @@ c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetse
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\wsastartupsingleton.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\_findfirst.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\main.obj
-c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\networkmanager.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\raksleep.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\rakstring.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\rakthread.obj
@@ -112,6 +111,10 @@ c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetse
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\connectiongraph2.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\consoleserver.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\datacompressor.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\networkmanager.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\client.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\lobby.obj
+c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\debug\tile.obj
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\debug\raknetserver.ilk
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\debug\raknetserver.exe
 c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\debug\raknetserver.pdb
