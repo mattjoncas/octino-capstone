@@ -14,24 +14,25 @@
 
 #define SERVER_PORT 80
 
-enum GameState{
-	IN_MENU, IN_LOBBY, IN_GAME
-};
-
 enum GameMessages{
-	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1,
-	ID_INIT_MESSAGE_1 = ID_USER_PACKET_ENUM + 2,
-	ID_LOBBY_COUNT = ID_USER_PACKET_ENUM + 3,
-	ID_REMOVE_CLIENT = ID_USER_PACKET_ENUM + 4,
-	ID_CLIENT_DATA = ID_USER_PACKET_ENUM + 5,
-	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6,
-	ID_START_GAME = ID_USER_PACKET_ENUM + 7,
-	ID_READY_UP = ID_USER_PACKET_ENUM + 8
+	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1, //chat message
+	ID_INIT_MESSAGE_1 = ID_USER_PACKET_ENUM + 2, //message from a new potential client trying to join
+	ID_LOBBY_COUNT = ID_USER_PACKET_ENUM + 3, //
+	ID_REMOVE_CLIENT = ID_USER_PACKET_ENUM + 4, //client to be removed
+	ID_CLIENT_DATA = ID_USER_PACKET_ENUM + 5, //client info to be sent to other clients
+	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6, //new tile from a client
+	ID_START_GAME = ID_USER_PACKET_ENUM + 7, //tell clients to start game
+	ID_READY_UP = ID_USER_PACKET_ENUM + 8, //clients can toggle if they are ready
+	ID_END_TURN = ID_USER_PACKET_ENUM + 9 //
 };
 
 class NetworkManager{
 
 public:
+	enum GameState{
+		MAIN_MENU, NETWORK_MENU, IN_LOBBY, IN_GAME
+	};
+
 	NetworkManager();
 	~NetworkManager();
 
@@ -41,7 +42,8 @@ public:
 
 	void Update(float _delta);
 	void SendChatMessage(std::string _message);
-	void SendNewTile(glm::vec3 _pos, float _rotation);
+	void SendNewTile(glm::vec3 _pos, float _rotation, int _value);
+	void EndTurn();
 
 	std::string GetPendingChatMessage();
 	bool UpdateClients();

@@ -1,18 +1,21 @@
-﻿Build started 02/02/2015 7:27:49 PM.
+﻿Build started 21/02/2015 10:13:14 PM.
      1>Project "C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\RakNetClient\RakNetClient.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SFML\include /I"C:\Users\Matt Joncas\Desktop\RakNet-master\Source" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Renderer" /I"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\src" /I"C:\Users\Matt Joncas\Desktop\glm-0.9.5.4\glm" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\GUI" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp
          Game.cpp
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(39): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(144): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(147): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(228): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(270): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(280): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(318): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(427): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(453): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(460): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(42): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(171): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(174): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(294): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(339): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(364): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(403): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(513): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(540): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(556): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(581): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(592): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(612): warning C4018: '<' : signed/unsigned mismatch
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\SFML\lib /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Debug" /LIBPATH:"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\lib" /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\Debug" "sfml-audio-d.lib" "sfml-graphics-d.lib" "sfml-network-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" ws2_32.lib OpenGL32.lib glew32.lib Renderer.lib GUI.lib SOIL.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.lib" /MACHINE:X86 Debug\Base64Encoder.obj
          Debug\BitStream.obj
@@ -134,4 +137,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.03
+Time Elapsed 00:00:06.01

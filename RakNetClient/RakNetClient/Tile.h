@@ -3,27 +3,29 @@
 
 class Tile : public mor::GameObject{
 
-	struct Adjacent{
-		Adjacent(){}
-		Adjacent(glm::vec3 _pos){
-			pos = _pos;
-			filled = false;
-		}
-		glm::vec3 pos;
-		bool filled;
-	};
-
 public:
 	Tile();
-	Tile(glm::vec3 _position, glm::vec3 _rotation);
+	Tile(glm::vec3 _position, glm::vec3 _rotation, int _value);
 	~Tile();
 
 	void Update(float _delta) override;
 
 	void Drop();
+	//adds the given tile if adjacent
+	bool AddAdjacent(Tile *_tile);
+	//check if a adjacent slot is filled
+	bool CheckAdjacent(int slot_index);
+	glm::vec3 GetAdjacentPosition(int slot_index);
+	Tile* GetAdjacentTile(int _index);
 
-	Adjacent adjacent_tiles[8];
+	void SetTileRotation(glm::vec3 _rotation);
+
+	inline int GetValue(){
+		return value;
+	}
 private:
+	int value;
+	Tile *adjacent_tiles[8];
 	//bool placed;
 };
 

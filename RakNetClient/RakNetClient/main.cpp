@@ -15,6 +15,7 @@ int main(){
 	window.setVerticalSyncEnabled(true);
 
 	Game game;
+	game.SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	game.Load();
 
 	//glClearColor(0.883f, 0.734f, 0.48f, 1.0);

@@ -15,13 +15,24 @@ private:
 	//virtual void Load() override;
 	virtual void Input() override;
 
-	int score;
-
 	std::vector<std::string> chat;
 
 	std::vector<Player> *players;
 
+	std::vector<int> hand;
+	void FillHand();
+
 	void LoadGUI();
+
+	void SendTiles();
+	void AddTempTile(glm::vec3 _pos, glm::vec3 _rot, int _value);
+	void DeleteTempTiles();
+	void AddTiles(std::vector<Tile*> _tiles);
+
+	bool TileValidPlacement(glm::vec3 tile_pos);
+	//logic test
+	void CheckTiles();
+	void TilePass(int iValue, int fValue, Tile *_tile, int previous_index);
 public:
 	~Game();
 	virtual void Load() override;
@@ -32,8 +43,6 @@ public:
 	
 	glm::vec3 GetPosition();
 	glm::vec3 Raycast(float mouseX, float mouseY);
-
-	void AddTiles(std::vector<Tile*> _tiles);
 
 	void Update(float _delta, sf::RenderWindow *_window);
 	void Render(sf::RenderWindow *_window);

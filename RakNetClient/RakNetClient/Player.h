@@ -31,7 +31,7 @@ public:
 	inline bool IsReady(){
 		return ready;
 	}
-
+	
 	inline void SetTurn(bool _is_turn){
 		is_turn = _is_turn;
 	}

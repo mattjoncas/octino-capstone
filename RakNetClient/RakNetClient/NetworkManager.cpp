@@ -15,7 +15,7 @@ NetworkManager::NetworkManager(){
 	
 	server_message = "";
 
-	state = IN_MENU;
+	state = MAIN_MENU;
 }
 
 NetworkManager::~NetworkManager(){
@@ -46,6 +46,15 @@ std::string NetworkManager::Connect(std::string _id, std::string _lobby){
 }
 void NetworkManager::Disconnect(){
 	peer->CloseConnection(serverAddress, true, 0, HIGH_PRIORITY);
+	
+	//RakNet::SocketDescriptor sd;
+	//peer->Startup(1, &sd, 1);
+
+	clients.clear();
+	lobby_count = 0;
+
+	connected = false;
+	state = NETWORK_MENU;
 }
 void NetworkManager::UpdateServer(glm::vec3 _pos){
 	RakNet::BitStream bsOut;
@@ -70,13 +79,19 @@ void NetworkManager::SendChatMessage(std::string _message){
 	//add message to chat_log
 	chat_log.push_back(message);
 }
-void NetworkManager::SendNewTile(glm::vec3 _pos, float _rotation){
+void NetworkManager::SendNewTile(glm::vec3 _pos, float _rotation, int _value){
 	RakNet::BitStream bsOut;
 	bsOut.Write((RakNet::MessageID)ID_NEW_TILE);
 	bsOut.Write(_pos.x);
 	bsOut.Write(_pos.y);
 	bsOut.Write(_pos.z);
 	bsOut.Write(_rotation);
+	bsOut.Write(_value);
+	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+}
+void NetworkManager::EndTurn(){
+	RakNet::BitStream bsOut;
+	bsOut.Write((RakNet::MessageID)ID_END_TURN);
 	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 }
 
@@ -158,7 +173,11 @@ void NetworkManager::UpdateClientData(){
 void NetworkManager::Update(float _delta){
 	packet = peer->Receive();
 	switch (state){
-	case IN_MENU:
+	case MAIN_MENU:
+		//NetworkManager doesn't need to do anything when at main_menu
+
+		break;
+	case NETWORK_MENU:
 		if (packet){
 			switch (packet->data[0]){
 			case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -192,6 +211,11 @@ void NetworkManager::Update(float _delta){
 				else if (strcmp(rs.C_String(), "lobby full") == 0){
 					printf("lobby full.\n");
 					server_message = "Lobby Full.";
+					Disconnect();
+				}
+				else if (strcmp(rs.C_String(), "lobby in game") == 0){
+					printf("lobby is in game.\n");
+					server_message = "Lobby in Game.";
 					Disconnect();
 				}
 				else{
@@ -313,7 +337,9 @@ void NetworkManager::Update(float _delta){
 					bsIn.Read(y);
 					bsIn.Read(z);
 					bsIn.Read(r);
-					tiles.push_back(new Tile(glm::vec3(x, y, z), glm::vec3(0.0f, 0.0f, r)));
+					int v;
+					bsIn.Read(v);
+					tiles.push_back(new Tile(glm::vec3(x, y, z), glm::vec3(0.0f, 0.0f, r), v));
 				}
 				update_tiles = true;
 			}

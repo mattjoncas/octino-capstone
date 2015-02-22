@@ -8,7 +8,8 @@ in vec3 vertexWorld;
 in vec3 camera_pos;
 
 layout(binding=0) uniform sampler2D tex;
-layout(binding=1) uniform samplerCubeShadow u_shadowCubeMap;
+
+layout(binding=2) uniform samplerCubeShadow u_shadowCubeMap;
 
 uniform MaterialUniforms {
     vec4 material_ambient, material_diffuse, material_specular;
@@ -59,6 +60,7 @@ void main(){
         float attenuation = 1.0f;
         float shadowFactor = 1.0f;
         vec3 lightVectorWorld;
+        vec3 normal = normalize(normalWorld);
         //point light
         if (lights[i].light_direction.xyz == vec3(0.0)){
             lightVectorWorld = normalize((lights[i].light_position).xyz - vertexWorld);
@@ -80,15 +82,22 @@ void main(){
         }
 
         //diffuse brightness
-        float Kd = dot(lightVectorWorld, normalize(normalWorld));
+        float Kd = dot(lightVectorWorld, normal);
         vec4 diffuse = Kd * diffuse_product;
 
-        //spec
-        vec3 reflected = reflect(-lightVectorWorld, normalize(normalWorld));
+        //spec brightness
+        //blinn
+        vec3 viewDir = normalize(camera_pos - vertexWorld); //reflected
+        vec3 halfDir = normalize(lightVectorWorld + viewDir); //eyeVector
+        float specAngle = max(dot(halfDir, normal), 0.0);
+        float Ks = pow(specAngle, shininess);
+        /*
+        //phong
+        vec3 reflected = reflect(-lightVectorWorld, normal);
         vec3 eyeVectorWorld = normalize(camera_pos - vertexWorld);
         float s = dot(reflected, eyeVectorWorld);
         //specular brightness
-        float Ks = pow(s, shininess);
+        float Ks = pow(s, shininess);*/
         vec4 specular = Ks * specular_product;
 
         // Compute terms in the illumination equation
