@@ -48,3 +48,10 @@ void Lobby::IncrementTurn(){
 void Lobby::AddTile(Tile _new_tile){
 	tiles.push_back(_new_tile);
 }
+
+bool Lobby::IsFull(){
+	if (clients.size() >= 4){
+		return true;
+	}
+	return false;
+}

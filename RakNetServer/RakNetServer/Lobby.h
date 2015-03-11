@@ -17,6 +17,7 @@ public:
 	std::vector<Tile> tiles;
 
 	bool inGame, ready;
+	bool IsFull();
 
 	void Update();
 	void StartGame();

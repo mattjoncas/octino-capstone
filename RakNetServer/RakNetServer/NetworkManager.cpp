@@ -9,9 +9,15 @@ NetworkManager::NetworkManager(){
 		RakNet::SocketDescriptor sd(SERVER_PORT, 0);
 		peer->Startup(MAX_CLIENTS, &sd, 1);
 
-		std::cout << "Server Running\n";
+
+		char str[512];
+		strcpy(str, peer->GetLocalIP(0));
+		std::cout << "Server Running. Local IP: " << str << "\n";
+
 		peer->SetMaximumIncomingConnections(MAX_CLIENTS);
 	}
+
+	srand(time(NULL));
 }
 
 NetworkManager::~NetworkManager(){
@@ -103,6 +109,7 @@ bool NetworkManager::Update(){
 				SendTiles(clients[clients.size() - 1]);
 			}
 			else{
+				printf("connection attempt failed.\n");
 				RakNet::BitStream bsOut;
 				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
 				if (_result == 2){ bsOut.Write("id invalid"); }
@@ -161,6 +168,14 @@ bool NetworkManager::Update(){
 			}
 		}
 			break;
+		case ID_RANDOM_LOBBY:
+		{
+			RakNet::BitStream bsOut;
+			bsOut.Write((RakNet::MessageID)ID_RANDOM_LOBBY);
+			bsOut.Write(GetRandomLobby().c_str());
+			SendPacket(&bsOut, packet->systemAddress);
+		}
+			break;
 		default:
 			printf("Message with identifier %i has arrived.\n", packet->data[0]);
 			break;
@@ -194,9 +209,11 @@ int NetworkManager::AddClient(){
 
 	for (int i = 0; i < clients.size(); i++){
 		if (clients[i]->id == client_id.C_String()){
-			printf("connection attempt failed.\n");
 			return 2;
 		}
+	}
+	if (!dManager.CheckID(client_id.C_String())){
+		return 2;
 	}
 
 	Client *newClient = new Client(packet->systemAddress, client_id.C_String(), lobby_name.C_String());
@@ -208,7 +225,7 @@ int NetworkManager::AddClient(){
 				delete(newClient);
 				return 4;
 			}
-			if (lobbies[i].clients.size() < 4){
+			if (!lobbies[i].IsFull()){
 				lobbies[i].clients.push_back(newClient);
 				clients.push_back(newClient);
 				std::cout << client_id << " joined '" << lobbies[i].name << "'\n";
@@ -368,4 +385,27 @@ void NetworkManager::SendTile(Lobby _lobby){
 	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].rotation);
 	bsOut.Write(_lobby.tiles[_lobby.tiles.size() - 1].value);
 	SendPacket(&bsOut, _lobby);
+}
+
+std::string NetworkManager::GetRandomLobby(){
+	bool open_lobby = false;
+	for (int i = 0; i < lobbies.size(); i++){
+		if (!lobbies[i].IsFull() && !lobbies[i].inGame){
+			open_lobby = true;
+			break;
+		}
+	}
+	if (open_lobby){
+		std::string lobby_name = "";
+		do {
+			lobby_name = lobbies[rand() % lobbies.size()].name;
+			
+		} while (lobby_name == "");
+		std::cout << "lobby open, '" << lobby_name << "' returned.\n";
+		return lobby_name;
+	}
+	else{
+		printf("No lobbies open.\n");
+		return "";
+	}
 }

@@ -43,8 +43,8 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\Matt Joncas\Desktop\RakNet-master\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Users\Matt Joncas\Desktop\RakNet-master\Source;C:\Users\Matt Joncas\Desktop\RakNet-master\DependentExtensions\SQLite3Plugin;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -180,9 +180,11 @@
     <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\WSAStartupSingleton.cpp" />
     <ClCompile Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DatabaseManager.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="sqlite3.c" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +343,7 @@
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\XBox360Includes.h" />
     <ClInclude Include="..\..\..\..\..\Desktop\RakNet-master\Source\_FindFirst.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="DatabaseManager.h" />
     <ClInclude Include="Lobby.h" />
     <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Tile.h" />
