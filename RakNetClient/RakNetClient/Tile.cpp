@@ -12,10 +12,14 @@ Tile::Tile(glm::vec3 _position, glm::vec3 _rotation, int _value){
 	for (int i = 0; i < 8; i++){
 		adjacent_tiles[i] = nullptr;
 	}
+	/*
+	for (int i = 0; i < 4; i++){
+		valid_sum[i] = nullptr;
+	}*/
 }
 
 Tile::~Tile(){
-
+	
 }
 
 void Tile::Update(float _delta){
@@ -39,7 +43,7 @@ void Tile::Drop(){
 }
 bool Tile::AddAdjacent(Tile *_tile){
 	for (int a = 0; a < 8; a++){
-		if (GetAdjacentPosition(a) == _tile->position && !adjacent_tiles[a]){
+		if (glm::vec2(GetAdjacentPosition(a)) == glm::vec2(_tile->position) && !adjacent_tiles[a]){
 			adjacent_tiles[a] = _tile;
 			
 			//update new adjacent tile
@@ -47,6 +51,12 @@ bool Tile::AddAdjacent(Tile *_tile){
 			if (ta > 7){
 				ta -= 8;
 			}
+			/*
+			if (a == 0) { valid_sum[0] = new bool; _tile->valid_sum[2] = valid_sum[0]; }
+			else if (a == 2) { valid_sum[1] = new bool; _tile->valid_sum[3] = valid_sum[1]; }
+			else if (a == 4) { valid_sum[2] = new bool; _tile->valid_sum[4] = valid_sum[2]; }
+			else if (a == 6) { valid_sum[3] = new bool; _tile->valid_sum[1] = valid_sum[3]; }*/
+
 			_tile->adjacent_tiles[ta] = this;
 			
 			return true;
@@ -88,4 +98,17 @@ glm::vec3 Tile::GetAdjacentPosition(int slot_index){
 }
 Tile* Tile::GetAdjacentTile(int _index){
 	return adjacent_tiles[_index];
+}
+
+void Tile::RemoveAdjacentTiles(){
+	for (int a = 0; a < 8; a++){
+		if (adjacent_tiles[a]){
+			int ta = a + 4;
+			if (ta > 7){
+				ta -= 8;
+			}
+			adjacent_tiles[a]->adjacent_tiles[ta] = nullptr;
+			adjacent_tiles[a] = nullptr;
+		}
+	}
 }

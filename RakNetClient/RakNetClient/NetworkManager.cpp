@@ -10,7 +10,9 @@ NetworkManager::NetworkManager(){
 	connected = false;
 	update_clients = true;
 	update_tiles = true;
+
 	//ping server [for science]
+	//peer->Ping("255.255.255.255", SERVER_PORT, 0);
 	peer->Ping("255.255.255.255", SERVER_PORT, 0);
 	
 	server_message = "";
@@ -26,35 +28,44 @@ bool NetworkManager::IsConnected(){
 	return connected;
 }
 
-std::string NetworkManager::Connect(std::string _id, std::string _lobby){
+std::string NetworkManager::Connect(){
+	
+	char str[512];
+		
+	strcpy(str, peer->GetLocalIP(0));
+	std::cout << str << "\n";
+		
+	peer->Connect(str, SERVER_PORT, 0, 0);
+
+	connected = true;
+
+	return "Please enter id/lobby.";
+}
+void NetworkManager::Disconnect(){
+	peer->CloseConnection(serverAddress, true, 0, HIGH_PRIORITY);
+
+	connected = false;
+	state = MAIN_MENU;
+}
+std::string NetworkManager::Join(std::string _id, std::string _lobby){
 	if (_id != "" && _lobby != ""){
 		id = _id;
 		lobby = _lobby;
 
-		char str[512];
-		
-		strcpy(str, peer->GetLocalIP(0));
-		std::cout << peer->GetLocalIP(0) << "\n";
-		
-		peer->Connect(str, SERVER_PORT, 0, 0);
+		clients.clear();
+		lobby_count = 0;
+
+		RakNet::BitStream bsOut;
+		bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
+		bsOut.Write(id.c_str());
+		bsOut.Write(lobby.c_str());
+		peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 
 		return "Connecting...";
 	}
 	else{
-		return "Please enter id/lobby.";
+		return "id/lobby required.";
 	}
-}
-void NetworkManager::Disconnect(){
-	peer->CloseConnection(serverAddress, true, 0, HIGH_PRIORITY);
-	
-	//RakNet::SocketDescriptor sd;
-	//peer->Startup(1, &sd, 1);
-
-	clients.clear();
-	lobby_count = 0;
-
-	connected = false;
-	state = NETWORK_MENU;
 }
 void NetworkManager::UpdateServer(glm::vec3 _pos){
 	RakNet::BitStream bsOut;
@@ -107,7 +118,11 @@ std::string NetworkManager::GetPendingChatMessage(){
 	}
 }
 bool NetworkManager::UpdateClients(){
-	return update_clients;
+	if (update_clients){ 
+		update_clients = false;
+		return true;
+	}
+	return false;
 }
 bool NetworkManager::UpdateTiles(){
 	return update_tiles;
@@ -181,15 +196,8 @@ void NetworkManager::Update(float _delta){
 		if (packet){
 			switch (packet->data[0]){
 			case ID_CONNECTION_REQUEST_ACCEPTED:
-				printf("Connection request accepted, attempting to connect.\n");
+				printf("Connection request accepted.\n");
 				serverAddress = packet->systemAddress;
-				{
-					RakNet::BitStream bsOut;
-					bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
-					bsOut.Write(id.c_str());
-					bsOut.Write(lobby.c_str());
-					peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
-				}
 				break;
 			case ID_INIT_MESSAGE_1:
 			{
@@ -199,29 +207,24 @@ void NetworkManager::Update(float _delta){
 				bsIn.Read(rs);
 				if (strcmp(rs.C_String(), "success") == 0){
 					state = IN_LOBBY;
-					connected = true;
 					printf("finally connected\n");
 					server_message = "Connection Successful.";
 				}
 				else if (strcmp(rs.C_String(), "id invalid") == 0){
 					printf("invalid id.\n");
 					server_message = "Invalid ID.";
-					Disconnect();
 				}
 				else if (strcmp(rs.C_String(), "lobby full") == 0){
 					printf("lobby full.\n");
 					server_message = "Lobby Full.";
-					Disconnect();
 				}
 				else if (strcmp(rs.C_String(), "lobby in game") == 0){
 					printf("lobby is in game.\n");
 					server_message = "Lobby in Game.";
-					Disconnect();
 				}
 				else{
 					printf("problem connecting\n");
 					server_message = "Problem Connecting.";
-					Disconnect();
 				}
 			}
 				break;
@@ -352,4 +355,28 @@ void NetworkManager::Update(float _delta){
 		break;
 	}
 	peer->DeallocatePacket(packet);
+}
+
+std::string NetworkManager::GetRandomLobby(){
+	RakNet::BitStream bsOut;
+	bsOut.Write((RakNet::MessageID)ID_RANDOM_LOBBY);
+	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+
+	//bool waiting = true;
+	while (true){
+		packet = peer->Receive();
+		if (packet){
+			switch (packet->data[0]){
+			case ID_RANDOM_LOBBY:
+				RakNet::RakString rs;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(rs);
+				peer->DeallocatePacket(packet);
+				return rs.C_String();
+			}
+		}
+
+		peer->DeallocatePacket(packet);
+	}
 }

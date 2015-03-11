@@ -32,7 +32,10 @@ private:
 	bool TileValidPlacement(glm::vec3 tile_pos);
 	//logic test
 	void CheckTiles();
-	void TilePass(int iValue, int fValue, Tile *_tile, int previous_index);
+	bool TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation);
+	void AdjustCamera();
+
+	void AddChatMessage(std::string _message, bool incoming_message);
 public:
 	~Game();
 	virtual void Load() override;

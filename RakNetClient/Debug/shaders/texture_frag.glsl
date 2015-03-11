@@ -72,7 +72,7 @@ void main(){
             currentDistanceToLight = clamp(currentDistanceToLight, 0.0, 1.0);
             vec3 fromLightToFragment = lightVectorWorld;
             // sample shadow cube map
-            if (i == 0){
+            if (i == 0 && lights[i].light_position.w == 1.0f){
                 shadowFactor = texture(u_shadowCubeMap, vec4(-fromLightToFragment, currentDistanceToLight));
             }
         }
@@ -87,8 +87,8 @@ void main(){
 
         //spec brightness
         //blinn
-        vec3 viewDir = normalize(camera_pos - vertexWorld); //reflected
-        vec3 halfDir = normalize(lightVectorWorld + viewDir); //eyeVector
+        vec3 viewDir = normalize(camera_pos - vertexWorld); //eyeVector
+        vec3 halfDir = normalize(lightVectorWorld + viewDir); //reflected
         float specAngle = max(dot(halfDir, normal), 0.0);
         float Ks = pow(specAngle, shininess);
         /*

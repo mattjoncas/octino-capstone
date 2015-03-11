@@ -12,7 +12,7 @@
 #include "BitStream.h"
 #include "RakNetTypes.h"  // MessageID
 
-#define SERVER_PORT 80
+#define SERVER_PORT 3265
 
 enum GameMessages{
 	ID_GAME_MESSAGE_1 = ID_USER_PACKET_ENUM + 1, //chat message
@@ -23,7 +23,8 @@ enum GameMessages{
 	ID_NEW_TILE = ID_USER_PACKET_ENUM + 6, //new tile from a client
 	ID_START_GAME = ID_USER_PACKET_ENUM + 7, //tell clients to start game
 	ID_READY_UP = ID_USER_PACKET_ENUM + 8, //clients can toggle if they are ready
-	ID_END_TURN = ID_USER_PACKET_ENUM + 9 //
+	ID_END_TURN = ID_USER_PACKET_ENUM + 9, //client can tell the server when their turn is finished
+	ID_RANDOM_LOBBY = ID_USER_PACKET_ENUM + 10 //get a random lobby from the server
 };
 
 class NetworkManager{
@@ -36,8 +37,9 @@ public:
 	NetworkManager();
 	~NetworkManager();
 
-	std::string Connect(std::string _id, std::string _lobby);
+	std::string Connect();
 	void Disconnect();
+	std::string Join(std::string _id, std::string _lobby);
 	bool IsConnected();
 
 	void Update(float _delta);
@@ -51,6 +53,8 @@ public:
 	std::vector<Player>* GetClients();
 	std::vector<Tile*> GetTiles();
 	int GetLobbyCount();
+
+	std::string GetRandomLobby();
 
 	std::string id, lobby;
 	bool is_turn;

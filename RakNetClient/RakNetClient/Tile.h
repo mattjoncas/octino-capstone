@@ -23,6 +23,8 @@ public:
 	inline int GetValue(){
 		return value;
 	}
+
+	void RemoveAdjacentTiles();
 private:
 	int value;
 	Tile *adjacent_tiles[8];

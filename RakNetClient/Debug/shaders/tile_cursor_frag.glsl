@@ -8,8 +8,7 @@ in vec3 vertexWorld;
 in vec3 camera_pos;
 
 layout(binding=0) uniform sampler2D tex;
-
-layout(binding=2) uniform samplerCubeShadow u_shadowCubeMap;
+layout(binding=1) uniform samplerCubeShadow u_shadowCubeMap;
 
 uniform MaterialUniforms {
     vec4 material_ambient, material_diffuse, material_specular;
@@ -34,7 +33,7 @@ out vec4 fColor;
 // array of offset direction for sampling
 vec3 gridSamplingDisk[20] = vec3[]
 (
-   vec3(1, 1, 1), vec3(1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1),
+   vec3(1, 1, 1), vec3(1, -1, 1), vec3(-1, -1, 1), vec3(-1, 1, 1), 
    vec3(1, 1, -1), vec3(1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
    vec3(1, 1, 0), vec3(1, -1, 0), vec3(-1, -1, 0), vec3(-1, 1, 0),
    vec3(1, 0, 1), vec3(-1, 0, 1), vec3(1, 0, -1), vec3(-1, 0, -1),
