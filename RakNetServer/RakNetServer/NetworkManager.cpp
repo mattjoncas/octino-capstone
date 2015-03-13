@@ -96,27 +96,19 @@ bool NetworkManager::Update(){
 		case ID_INIT_MESSAGE_1:
 		{
 			int _result = AddClient();
+			//send login result
+			RakNet::BitStream bsOut;
+			bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
+			bsOut.Write(_result);
+			SendPacket(&bsOut, packet->systemAddress);
 			if (_result < 2){
-				//send confirmation
-				RakNet::BitStream bsOut;
-				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
-				bsOut.Write("success");
-				SendPacket(&bsOut, packet->systemAddress);
-
-				//update client lobby counts
+				//update clients in lobby
 				UpdateClients(FindLobby(FindClient(packet->systemAddress)->lobby));
-				//send tiles to newest client
+				//send exsiting tiles to new client [not needed anymore*]
 				SendTiles(clients[clients.size() - 1]);
 			}
 			else{
 				printf("connection attempt failed.\n");
-				RakNet::BitStream bsOut;
-				bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
-				if (_result == 2){ bsOut.Write("id invalid"); }
-				else if (_result == 3){ bsOut.Write("lobby full"); }
-				else if (_result == 4){ bsOut.Write("lobby in game"); }
-				else { bsOut.Write("problem connecting"); }
-				SendPacket(&bsOut, packet->systemAddress);
 			}
 		}
 			break;
@@ -199,21 +191,28 @@ bool NetworkManager::Update(){
 }
 
 int NetworkManager::AddClient(){
-	RakNet::RakString client_id, lobby_name;
+	RakNet::RakString client_id, client_pass, lobby_name;
 	RakNet::BitStream bsIn(packet->data, packet->length, false);
 	bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-	//get id
+	//get id / password
 	bsIn.Read(client_id);
+	bsIn.Read(client_pass);
 	//get lobby name
 	bsIn.Read(lobby_name);
 
 	for (int i = 0; i < clients.size(); i++){
 		if (clients[i]->id == client_id.C_String()){
-			return 2;
+			return INVALID_ID;
 		}
 	}
 	if (!dManager.CheckID(client_id.C_String())){
-		return 2;
+		return INVALID_ID;
+	}
+	else{
+		if (!dManager.Login(client_id.C_String(), client_pass.C_String())){
+			std::cout << client_id.C_String() << ", " << client_pass.C_String() << "\n";
+			return INVALID_PASSWORD;
+		}
 	}
 
 	Client *newClient = new Client(packet->systemAddress, client_id.C_String(), lobby_name.C_String());
@@ -223,18 +222,18 @@ int NetworkManager::AddClient(){
 			if (lobbies[i].inGame){
 				std::cout << "Cannot join " << lobbies[i].name << ", in game.\n";
 				delete(newClient);
-				return 4;
+				return LOBBY_INGAME;
 			}
 			if (!lobbies[i].IsFull()){
 				lobbies[i].clients.push_back(newClient);
 				clients.push_back(newClient);
 				std::cout << client_id << " joined '" << lobbies[i].name << "'\n";
-				return 1;
+				return SUCCESSFUL;
 			}
 			else{
 				std::cout << lobbies[i].name << " is full.\n";
 				delete(newClient);
-				return 3;
+				return LOBBY_FULL;
 			}
 		}
 	}
@@ -244,7 +243,7 @@ int NetworkManager::AddClient(){
 	lobbies[lobbies.size() - 1].clients.push_back(newClient);
 	clients.push_back(newClient);
 	std::cout << client_id << " created '" << lobbies[lobbies.size() - 1].name << "'\n";
-	return 0;
+	return SUCCESSFUL;
 }
 void NetworkManager::RemoveClient(RakNet::SystemAddress _address){
 	if (FindClient(packet->systemAddress) == NULL){

@@ -17,6 +17,8 @@ public:
 	bool CheckID(std::string player_id);
 	bool Login(std::string player_id, std::string player_pass);
 
+	bool AddWin(std::string player_id);
+
 	void PrintDatabase();
 private:
 	sqlite3 *db;

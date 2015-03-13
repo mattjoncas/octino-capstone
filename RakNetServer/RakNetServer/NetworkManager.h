@@ -29,6 +29,9 @@ enum GameMessages{
 	ID_END_TURN = ID_USER_PACKET_ENUM + 9, //client can tell the server when their turn is finished
 	ID_RANDOM_LOBBY = ID_USER_PACKET_ENUM + 10 //get a random lobby from the server
 };
+enum LoginMessages{
+	SUCCESSFUL, INVALID_ID, INVALID_PASSWORD, LOBBY_FULL, LOBBY_INGAME, DEFAULT_ERROR
+};
 
 class NetworkManager
 {

@@ -112,6 +112,46 @@ bool DatabaseManager::Login(std::string player_id, std::string player_pass){
 	return true;
 }
 
+bool DatabaseManager::AddWin(std::string player_id){
+	std::string s = "SELECT wins FROM ";
+	s += TABLE_NAME;
+	s += " WHERE ";
+	s += "id = '";
+	s += player_id;
+	s += "';";
+
+	char **results = NULL;
+	int rows, columns;
+	rc = sqlite3_get_table(db, s.c_str(), &results, &rows, &columns, &error);
+	if (rc){
+		std::cerr << "Error retrieving wins from SQLite3 query: " << sqlite3_errmsg(db) << std::endl << std::endl;
+		sqlite3_free(error);
+	}
+	if (rows == 0){ 
+		std::cout << "cannot add win, player id not in database.\n";
+		return false; 
+	}
+
+	int c_wins = std::stoi(results[rows * columns]);
+	std::cout << "wins converted to int = " << c_wins << "\n";
+	c_wins++;
+	//update players wins
+	s = "UPDATE ";
+	s += TABLE_NAME;
+	s += " SET wins = ";
+	s += std::to_string(c_wins);
+	s += " WHERE ";
+	s += "id = '";
+	s += player_id;
+	s += "';";
+	rc = sqlite3_get_table(db, s.c_str(), &results, &rows, &columns, &error);
+	if (rc){
+		std::cerr << "Error updating player wins: " << sqlite3_errmsg(db) << std::endl << std::endl;
+		sqlite3_free(error);
+	}
+	return true;
+}
+
 void DatabaseManager::PrintDatabase(){
 	std::cout << "Retrieving values in Client Table ..." << std::endl;
 	std::string s = "SELECT * FROM ";
