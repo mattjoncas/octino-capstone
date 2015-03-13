@@ -8,7 +8,8 @@ in vec3 vertexWorld;
 in vec3 camera_pos;
 
 layout(binding=0) uniform sampler2D tex;
-layout(binding=1) uniform samplerCubeShadow u_shadowCubeMap;
+
+layout(binding=2) uniform samplerCubeShadow u_shadowCubeMap;
 
 uniform MaterialUniforms {
     vec4 material_ambient, material_diffuse, material_specular;
@@ -70,7 +71,7 @@ void main(){
             currentDistanceToLight = clamp(currentDistanceToLight, 0.0, 1.0);
             vec3 fromLightToFragment = lightVectorWorld;
             // sample shadow cube map
-            if (i == 0){
+            if (i == 0 && lights[i].light_position.w == 1.0f){
                 shadowFactor = texture(u_shadowCubeMap, vec4(-fromLightToFragment, currentDistanceToLight));
             }
         }

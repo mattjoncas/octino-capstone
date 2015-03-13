@@ -47,7 +47,7 @@ void NetworkManager::Disconnect(){
 	connected = false;
 	state = MAIN_MENU;
 }
-std::string NetworkManager::Join(std::string _id, std::string _lobby){
+std::string NetworkManager::Join(std::string _id, std::string _pass, std::string _lobby){
 	if (_id != "" && _lobby != ""){
 		id = _id;
 		lobby = _lobby;
@@ -58,6 +58,7 @@ std::string NetworkManager::Join(std::string _id, std::string _lobby){
 		RakNet::BitStream bsOut;
 		bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
 		bsOut.Write(id.c_str());
+		bsOut.Write(_pass.c_str());
 		bsOut.Write(lobby.c_str());
 		peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 
@@ -201,24 +202,28 @@ void NetworkManager::Update(float _delta){
 				break;
 			case ID_INIT_MESSAGE_1:
 			{
-				RakNet::RakString rs;
+				int login_result;
 				RakNet::BitStream bsIn(packet->data, packet->length, false);
 				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
-				bsIn.Read(rs);
-				if (strcmp(rs.C_String(), "success") == 0){
+				bsIn.Read(login_result);
+				if (login_result == SUCCESSFUL){
 					state = IN_LOBBY;
 					printf("finally connected\n");
 					server_message = "Connection Successful.";
 				}
-				else if (strcmp(rs.C_String(), "id invalid") == 0){
+				else if (login_result == INVALID_PASSWORD){
+					printf("invalid password.\n");
+					server_message = "Invalid Password.";
+				}
+				else if (login_result == INVALID_ID){
 					printf("invalid id.\n");
 					server_message = "Invalid ID.";
 				}
-				else if (strcmp(rs.C_String(), "lobby full") == 0){
+				else if (login_result == LOBBY_FULL){
 					printf("lobby full.\n");
 					server_message = "Lobby Full.";
 				}
-				else if (strcmp(rs.C_String(), "lobby in game") == 0){
+				else if (login_result == LOBBY_INGAME){
 					printf("lobby is in game.\n");
 					server_message = "Lobby in Game.";
 				}

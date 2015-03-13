@@ -7,7 +7,7 @@
 #define SCREEN_HEIGHT 600
 
 sf::ContextSettings settings(24, 8, 8, 2, 0);
-sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Prototype", sf::Style::Close, settings);
+sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Prototype", sf::Style::Default, settings);
 
 bool running = true;
 
@@ -20,7 +20,8 @@ int main(){
 
 	//glClearColor(0.883f, 0.734f, 0.48f, 1.0);
 	//glClearColor(0.05f, 0.05f, 0.05f, 1.0);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0);
+	//glClearColor(0.1f, 0.1f, 0.1f, 1.0);
+	glClearColor(0.204f, 0.251f, 0.137f, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
