@@ -17,6 +17,8 @@ public:
 	bool CheckAdjacent(int slot_index);
 	glm::vec3 GetAdjacentPosition(int slot_index);
 	Tile* GetAdjacentTile(int _index);
+	//get slot index based on requested operation [0 = +, 1 = -, 2 = *, 3 = /]
+	int GetAdjacentIndex(int _operation);
 
 	void SetTileRotation(glm::vec3 _rotation);
 

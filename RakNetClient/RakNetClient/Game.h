@@ -25,17 +25,19 @@ private:
 	void LoadGUI();
 
 	void SendTiles();
-	void AddTempTile(glm::vec3 _pos, glm::vec3 _rot, int _value);
+	bool AddTempTile(glm::vec3 _pos, glm::vec3 _rot, int _value);
 	void DeleteTempTiles();
 	void AddTiles(std::vector<Tile*> _tiles);
 
 	bool TileValidPlacement(glm::vec3 tile_pos);
 	//logic test
-	void CheckTiles();
+	bool CheckTiles();
 	bool TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation);
 	void AdjustCamera();
 
 	void AddChatMessage(std::string _message, bool incoming_message);
+
+	void GeneratePuzzle();
 public:
 	~Game();
 	virtual void Load() override;

@@ -43,7 +43,7 @@ void Game::Load(){
 
 	camera = new mor::Camera(glm::vec3(0.0f, 0.0f, 5.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), renderer.ScreenWidth(), renderer.ScreenHeight(), false);
 	white_light = new mor::Light(glm::vec3(0.0, 0.0, 20.0), glm::vec4(0.05, 0.05, 0.05, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(1.0, 1.0, 1.0, 1.0), 300.0f, 1.0f, true);
-	white_light->SetPosition(glm::vec4(00.0f, 0.0f, 40.0f, 0.0f));
+	white_light->SetPosition(glm::vec3(00.0f, 0.0f, 40.0f));
 
 	renderer.SetCamera(camera);
 	renderer.AddLight(white_light);
@@ -248,6 +248,8 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 					gManager.BindMenu(-1);
 					puzzle_mode = true;
 					menu_tile->SetActive(false);
+					GeneratePuzzle();
+					AdjustCamera();
 				}
 				if (g_event.name == "quit_button"){
 					nManager.Disconnect();
@@ -354,7 +356,7 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 	case NetworkManager::GameState::IN_GAME:
 		if (!inGame){
 			inGame = true;
-			white_light->SetPosition(glm::vec4(0.0f, 0.0f, -10.0f, 1.0f));
+			white_light->SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 			if (!puzzle_mode){
 				gManager.BindMenu(game_hud);
 				FillHand();
@@ -388,7 +390,14 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 						if (h != glm::vec3(0, 0, 0) && nManager.is_turn){
 							h = glm::floor(h * (1.0f / 0.5f) + 0.5f) / (1.0f / 0.5f);
 							//add temp tile
-							AddTempTile(h, glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), selected_tile);
+							bool valid = AddTempTile(h, glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), selected_tile);
+							if (!valid){
+								gManager.SetActive("end_button", false);
+							}
+							else{
+								gManager.SetActive("end_button", true);
+							}
+							AdjustCamera();
 							tiles_placed++;
 							//nManager.SendNewTile(h, glm::radians(tile_rotation), selected_tile);
 							tile_cursor->SetActive(false);
@@ -466,6 +475,9 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 
 							delete(tiles[tiles.size() - 1]);
 							tiles.erase(tiles.end() - 1);
+
+							CheckTiles();
+							AdjustCamera();
 						}
 					}
 					break;
@@ -533,7 +545,6 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 							glm::vec3 h = Raycast(event.mouseButton.x, event.mouseButton.y);
 							if (h != glm::vec3(0, 0, 0)){
 								h = glm::floor(h * (1.0f / 0.5f) + 0.5f) / (1.0f / 0.5f);
-								//add temp tile
 								AddTempTile(h, glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), selected_tile);
 								tiles_placed++;
 								tile_cursor->SetActive(false);
@@ -640,7 +651,14 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 							isRunning = false;
 						}
 						if (event.key.code == sf::Keyboard::BackSpace){
-							
+							GeneratePuzzle();
+						}
+						if (event.key.code == sf::Keyboard::P){
+							printf("tiles checked. ***\n");
+							CheckTiles();
+						}
+						if (event.key.code == sf::Keyboard::O){
+							AdjustCamera();
 						}
 						break;
 					}
@@ -692,7 +710,7 @@ glm::vec3 Game::Raycast(float mouseX, float mouseY){
 
 	glm::vec3 mts = camera->pos;
 	//this contains camera props the are currently private [need to fix this vv]
-	float hNear = 2 * tan(glm::radians(45.0f) / 2) * 0.1f;
+	float hNear = 2 * tan(glm::radians(camera->fov) / 2) * camera->fnear;
 	float wNear = hNear * renderer.ScreenWidth() / renderer.ScreenHeight();
 
 	mts.x -= wNear / 2;
@@ -744,25 +762,24 @@ bool Game::TileValidPlacement(glm::vec3 tile_pos){
 	}
 	return true;
 }
-void Game::AddTempTile(glm::vec3 _pos, glm::vec3 _rot, int _value){
+bool Game::AddTempTile(glm::vec3 _pos, glm::vec3 _rot, int _value){
 	Tile *tile = new Tile(_pos, _rot, _value);
 	tile->model = tile_model;
 	tile->shader = tile_cursor->shader;
 	mor::GameObject *nm = new mor::GameObject(glm::vec3(0.0f, 0.0f, 0.1f), glm::vec3(glm::radians(-90.0f), 0.0f, -tile->rotation.z), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
 	nm->model = renderer.LoadModel(std::to_string(tile->GetValue()));
 	tile->AddChild(nm);
+
+	tiles.push_back(tile);
 	
-	if (tiles.size() > 0){
+	if (tiles.size() > 1){
 		for (int x = 0; x < tiles.size() - 1; x++){
 			Tile *a_t = dynamic_cast<Tile*>(tiles[x]);
 			tile->AddAdjacent(a_t);
 		}
 	}
 
-	tiles.push_back(tile);
-
-	CheckTiles();
-	AdjustCamera();
+	return CheckTiles();
 }
 void Game::DeleteTempTiles(){
 	for (int i = 0; i < tiles_placed; i++){
@@ -810,9 +827,10 @@ void Game::FillHand(){
 	}
 }
 
-void Game::CheckTiles(){
+bool Game::CheckTiles(){
 	if (tiles.size() > 1){
 		//check each tile
+		bool bad_placement = false;
 		for (int i = 0; i < tiles.size(); i++){
 			Tile *t = dynamic_cast<Tile*>(tiles[i]);
 			for (int a = 0; a < 7; a+=2){
@@ -829,6 +847,8 @@ void Game::CheckTiles(){
 					if (!TilePass(t, t->GetAdjacentTile(a), p, equation) && !TilePass(t->GetAdjacentTile(a), t, a, e)){
 						t->material = red;
 						t->GetAdjacentTile(a)->material = red;
+
+						bad_placement = true;
 					}
 					else{
 						t->material = 0;
@@ -836,6 +856,12 @@ void Game::CheckTiles(){
 					}
 				}
 			}
+		}
+		if (bad_placement){
+			return false;
+		}
+		else{
+			return true;
 		}
 	}
 }
@@ -895,6 +921,7 @@ bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<
 				r_final *= _equation[i - 1];
 			}
 		}
+		/*
 		//print test
 		std::cout << i_tile->GetValue() << " = " << _equation[0];
 		for (int i = 1; i < _equation.size(); i++){
@@ -914,22 +941,22 @@ bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<
 				std::cout << _equation[i];
 			}
 		}
-		std::cout << " \n";
+		std::cout << " \n";*/
 		if (i_tile->GetValue() != l_final && i_tile->GetValue() != r_final){
-			printf("conflict: %i != %f || %f \n", i_tile->GetValue(), l_final, r_final);
+			//printf("conflict: %i != %f || %f \n", i_tile->GetValue(), l_final, r_final);
 			return false;
 		}
 		//bug fix test
 		bool c_test = false;
 		for (int i = 1; i < 8; i += 2){
 			if (i_tile->GetAdjacentTile(i)){
-				printf("ADJACENT PASSS!!!\n");
+				//printf("ADJACENT PASSS!!!\n");
 				c_test = true;
 				break;
 			}
 		}
 		if (_equation.size() == 1 && c_test){
-			printf("NOT EQUAL!!\n");
+			//printf("NOT EQUAL!!\n");
 			return false;
 		}
 		return true;
@@ -973,4 +1000,159 @@ void Game::AddChatMessage(std::string _message, bool incoming_message){
 	else{
 		gManager.AddText(game_hud, "chat" + std::to_string(chat.size() - 1), 4, 540, false, _message, sf::Color(202, 33, 33, 255), "TF2.ttf", 20);
 	}
+}
+
+void Game::GeneratePuzzle(){
+	for (std::vector<mor::GameObject*>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter){
+		delete((*iter));
+	}
+	tiles.clear();
+	tiles_placed = 0;
+
+	camera->SetPosition(glm::vec3(0.0f));
+	glm::vec3 h = Raycast(renderer.ScreenWidth() / 2, renderer.ScreenHeight() / 2);
+	//place inital tile
+	int t_value = rand() % 10;
+	h = glm::floor(h * (1.0f / 0.5f) + 0.5f) / (1.0f / 0.5f);
+	AddTempTile(h, glm::vec3(0.0f, 0.0f, glm::radians(0.0f)), t_value);
+	tiles_placed++;
+	//fill puzzle randomly
+	int puzzle_size = 4;
+	for (int i = 0; i < puzzle_size; i++){
+		Tile *t = dynamic_cast<Tile*>(tiles[rand() % tiles.size()]);
+		//if tile's =s are full break
+		bool test = false;
+		for (int j = 0; j < 7; j+=2){
+			if (!t->CheckAdjacent(j)){
+				test = true;
+				break;
+			}
+		}
+		if (!test){
+			i--;
+			continue;
+		}
+		float a = 0, b = 0;
+		int op;
+		test = false;
+		while (!test){
+			a = rand() % 10;
+			b = rand() % 10;
+
+			if (a + b == t->GetValue()){ test = true; op = 0; }
+			else if (a - b == t->GetValue()){ test = true; op = 1; }
+			else if (b - a == t->GetValue()){ test = true; op = 1; }
+			else if (a * b == t->GetValue()){ test = true; op = 2; }
+			else if (b != 0){
+				if (a / b == t->GetValue()){ test = true; op = 3; }
+			}
+			else if (a != 0){
+				if (b / a == t->GetValue()){ test = true; op = 3; }
+			}
+		}
+		//get a random '=' tile_slot
+		int tile_slot = rand() % 8;
+		if (tile_slot % 2 != 0){
+			tile_slot -= 1;
+		}
+		//make sure tile_slot is open
+		while (t->CheckAdjacent(tile_slot)){
+			tile_slot = rand() % 8;
+			if (tile_slot % 2 != 0){
+				tile_slot -= 1;
+			}
+		}
+		//get rotation based on tile_slot
+		if (tile_slot == 0){ tile_rotation = 0.0f; }
+		else if (tile_slot == 2){ tile_rotation = 270.0f; }
+		else if (tile_slot == 4){ tile_rotation = 180.0f; }
+		else if (tile_slot == 6){ tile_rotation = 90.0f; }
+		if (op == 2 || op == 3){
+			tile_rotation = tile_rotation + 180.0f;
+		}
+		//random offset
+		int f = rand() % 2;
+		if (op == 0){
+			if (f != 0){
+				tile_rotation -= 90.0f;
+			}
+			//std::cout << a << ", " << b << " + ;";
+		}
+		else if (op == 1){
+			if (f != 0){
+				tile_rotation += 90.0f;
+			}
+			//std::cout << a << ", " << b << " - ;";
+		}
+		else if (op == 2){
+			if (f != 0){
+				tile_rotation += 90.0f;
+			}
+			//std::cout << a << ", " << b << " * ;";
+		}
+		else if (op == 3){
+			if (f != 0){
+				tile_rotation -= 90.0f;
+			}
+			//std::cout << a << ", " << b << " / ;";
+		}
+		//rotation clamp
+		if (tile_rotation >= 360.0f){ tile_rotation -= 360.0f; }
+		else if (tile_rotation < 0.0f){ tile_rotation += 360.0f; }
+		
+		if (TileValidPlacement(t->GetAdjacentPosition(tile_slot))){
+			AddTempTile(t->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), a);
+			tiles_placed++;
+		}
+		else{
+			printf("TileValidPlacement returned false!!! ******\n");
+			i--;
+			continue;
+		}
+		
+		tile_rotation = glm::degrees(tiles[tiles.size() - 1]->rotation.z) + 180.0f;
+		if (tile_rotation >= 360.0f){ tile_rotation -= 360.0f; };
+		
+		Tile* second_tile = dynamic_cast<Tile*>(tiles[tiles.size() - 1]);
+		tile_slot = second_tile->GetAdjacentIndex(op);
+		if (TileValidPlacement(second_tile->GetAdjacentPosition(tile_slot))){
+			if (AddTempTile(second_tile->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), b)){
+				tiles_placed++;
+			}
+			else{
+				//ERROR!!
+				printf("CHECK TILES RETURNED FALSE!!! ******\n");
+				//remove both new tiles
+				dynamic_cast<Tile*>(tiles[tiles.size() - 1])->RemoveAdjacentTiles();
+				delete(tiles[tiles.size() - 1]);
+				tiles.erase(tiles.end() - 1);
+				second_tile->RemoveAdjacentTiles();
+				delete(tiles[tiles.size() - 1]);
+				tiles.erase(tiles.end() - 1);
+				tiles_placed --;
+
+				for (int i = 0; i < tiles.size(); i++){
+					tiles[i]->material = 0;
+				}
+
+				i--;
+				continue;
+			}
+		}
+		else{
+			printf("TileValidPlacement returned false!!! ******\n");
+			second_tile->RemoveAdjacentTiles();
+			delete(tiles[tiles.size() - 1]);
+			tiles.erase(tiles.end() - 1);
+			tiles_placed--;
+
+			for (int i = 0; i < tiles.size(); i++){
+				tiles[i]->material = 0;
+			}
+
+			i--;
+			continue;
+		}
+	}
+	printf("Puzzle generated!\n");
 }

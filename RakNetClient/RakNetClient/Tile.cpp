@@ -100,6 +100,33 @@ Tile* Tile::GetAdjacentTile(int _index){
 	return adjacent_tiles[_index];
 }
 
+int Tile::GetAdjacentIndex(int _operation){
+	if (_operation == 0){
+		if (glm::degrees(rotation.z) == 0.0f){ return 7; }
+		else if (glm::degrees(rotation.z) == 90.0f){ return 5; }
+		else if (glm::degrees(rotation.z) == 180.0f){ return 3; }
+		else { return 1; }
+	}
+	else if (_operation == 1){
+		if (glm::degrees(rotation.z) == 0.0f){ return 1; }
+		else if (glm::degrees(rotation.z) == 90.0f){ return 7; }
+		else if (glm::degrees(rotation.z) == 180.0f){ return 5; }
+		else { return 3; }
+	}
+	else if (_operation == 2){
+		if (glm::degrees(rotation.z) == 0.0f){ return 5; }
+		else if (glm::degrees(rotation.z) == 90.0f){ return 3; }
+		else if (glm::degrees(rotation.z) == 180.0f){ return 1; }
+		else { return 7; }
+	}
+	else{
+		if (glm::degrees(rotation.z) == 0.0f){ return 3; }
+		else if (glm::degrees(rotation.z) == 90.0f){ return 1; }
+		else if (glm::degrees(rotation.z) == 180.0f){ return 7; }
+		else { return 5; }
+	}
+}
+
 void Tile::RemoveAdjacentTiles(){
 	for (int a = 0; a < 8; a++){
 		if (adjacent_tiles[a]){
