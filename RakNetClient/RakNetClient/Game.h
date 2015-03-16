@@ -20,7 +20,8 @@ private:
 	std::vector<Player> *players;
 
 	std::vector<int> hand;
-	void FillHand();
+	void FillHand(int hand_size);
+	void EmptyHand();
 
 	void LoadGUI();
 
