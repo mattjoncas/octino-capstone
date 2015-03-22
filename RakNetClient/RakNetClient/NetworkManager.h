@@ -24,7 +24,9 @@ enum GameMessages{
 	ID_START_GAME = ID_USER_PACKET_ENUM + 7, //tell clients to start game
 	ID_READY_UP = ID_USER_PACKET_ENUM + 8, //clients can toggle if they are ready
 	ID_END_TURN = ID_USER_PACKET_ENUM + 9, //client can tell the server when their turn is finished
-	ID_RANDOM_LOBBY = ID_USER_PACKET_ENUM + 10 //get a random lobby from the server
+	ID_RANDOM_LOBBY = ID_USER_PACKET_ENUM + 10, //get a random lobby from the server
+	ID_END_GAME = ID_USER_PACKET_ENUM + 11, //end game
+	ID_CREATE_NEW_ID = ID_USER_PACKET_ENUM + 12 //client is creating a new id
 };
 enum LoginMessages{
 	SUCCESSFUL, INVALID_ID, INVALID_PASSWORD, LOBBY_FULL, LOBBY_INGAME, DEFAULT_ERROR
@@ -34,7 +36,7 @@ class NetworkManager{
 
 public:
 	enum GameState{
-		MAIN_MENU, NETWORK_MENU, IN_LOBBY, IN_GAME //MAIN_MENU, NETWORK_MENU, CREATEID_MENU, NETWORK_LOBBY, NETWORK_GAME, OFFLINE_GAME, PUZZLE_GAME, TUTORIAL
+		MAIN_MENU, NETWORK_MENU, CREATE_ID_MENU, IN_LOBBY, IN_GAME //NETWORK_LOBBY, NETWORK_GAME, OFFLINE_GAME, PUZZLE_GAME, TUTORIAL
 	};
 
 	NetworkManager();
@@ -61,14 +63,16 @@ public:
 
 	std::string id, lobby;
 	bool is_turn;
+	bool game_done;
 
-	void UpdateServer(glm::vec3 _pos);
+	void UpdateServer(glm::vec3 _pos, int _hand_count);
 
 	std::string GetServerMessage();
 
 	GameState state;
 
 	void ReadyUp();
+	std::string CreateNewID(std::string _new_id, std::string _new_pass);
 private:
 	bool connected;
 	bool update_clients, update_tiles;

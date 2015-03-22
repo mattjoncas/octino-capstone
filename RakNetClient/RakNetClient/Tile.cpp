@@ -16,6 +16,10 @@ Tile::Tile(glm::vec3 _position, glm::vec3 _rotation, int _value){
 	for (int i = 0; i < 4; i++){
 		valid_sum[i] = nullptr;
 	}*/
+
+	for (int i = 0; i < 4; i++){
+		solved[i] = false;
+	}
 }
 
 Tile::~Tile(){

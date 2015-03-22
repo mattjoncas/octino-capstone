@@ -27,6 +27,8 @@ public:
 	}
 
 	void RemoveAdjacentTiles();
+
+	bool solved[4];
 private:
 	int value;
 	Tile *adjacent_tiles[8];

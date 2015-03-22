@@ -10,6 +10,7 @@ NetworkManager::NetworkManager(){
 	connected = false;
 	update_clients = true;
 	update_tiles = true;
+	game_done = false;
 
 	//ping server [for science]
 	//peer->Ping("255.255.255.255", SERVER_PORT, 0);
@@ -37,9 +38,7 @@ std::string NetworkManager::Connect(){
 		
 	peer->Connect(str, SERVER_PORT, 0, 0);
 
-	connected = true;
-
-	return "Please enter id/lobby.";
+	return "Please enter id & lobby.";
 }
 void NetworkManager::Disconnect(){
 	peer->CloseConnection(serverAddress, true, 0, HIGH_PRIORITY);
@@ -68,13 +67,14 @@ std::string NetworkManager::Join(std::string _id, std::string _pass, std::string
 		return "id/lobby required.";
 	}
 }
-void NetworkManager::UpdateServer(glm::vec3 _pos){
+void NetworkManager::UpdateServer(glm::vec3 _pos, int _hand_count){
 	RakNet::BitStream bsOut;
 	bsOut.Write((RakNet::MessageID)ID_CLIENT_DATA);
 	//send packet
 	bsOut.Write(_pos.x);
 	bsOut.Write(_pos.y);
 	bsOut.Write(_pos.z);
+	bsOut.Write(_hand_count);
 	peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
 }
 
@@ -189,16 +189,14 @@ void NetworkManager::UpdateClientData(){
 void NetworkManager::Update(float _delta){
 	packet = peer->Receive();
 	switch (state){
-	case MAIN_MENU:
-		//NetworkManager doesn't need to do anything when at main_menu
-
-		break;
 	case NETWORK_MENU:
 		if (packet){
 			switch (packet->data[0]){
 			case ID_CONNECTION_REQUEST_ACCEPTED:
 				printf("Connection request accepted.\n");
 				serverAddress = packet->systemAddress;
+				connected = true;
+				server_message = "Please enter id/lobby.";
 				break;
 			case ID_INIT_MESSAGE_1:
 			{
@@ -235,6 +233,28 @@ void NetworkManager::Update(float _delta){
 				break;
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
+				break;
+			}
+		}
+		break;
+	case CREATE_ID_MENU:
+		//get message back from server regarding id creation
+		if (packet){
+			switch (packet->data[0]){
+			case ID_CREATE_NEW_ID:
+				int result;
+				RakNet::BitStream bsIn(packet->data, packet->length, false);
+				bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+				bsIn.Read(result);
+
+				if (result == SUCCESSFUL){
+					printf("Account created.\n");
+					server_message = "Account created.";
+				}
+				else{
+					printf("Error creating account, try again.\n");
+					server_message = "Error creating account, try again.";
+				}
 				break;
 			}
 		}
@@ -352,6 +372,9 @@ void NetworkManager::Update(float _delta){
 				update_tiles = true;
 			}
 				break;
+			case ID_END_GAME:
+				game_done = true;
+				break;
 			default:
 				printf("Message with identifier %i has arrived.\n", packet->data[0]);
 				break;
@@ -383,5 +406,18 @@ std::string NetworkManager::GetRandomLobby(){
 		}
 
 		peer->DeallocatePacket(packet);
+	}
+}
+std::string NetworkManager::CreateNewID(std::string _new_id, std::string _new_pass){
+	if (_new_id != "" && _new_pass != ""){
+		RakNet::BitStream bsOut;
+		bsOut.Write((RakNet::MessageID)ID_CREATE_NEW_ID);
+		bsOut.Write(_new_id.c_str());
+		bsOut.Write(_new_pass.c_str());
+		peer->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, serverAddress, false);
+		return "Connecting...";
+	}
+	else{
+		return "Please enter a new id & password.";
 	}
 }

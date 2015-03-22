@@ -5,6 +5,7 @@
 
 #define SCREEN_WIDTH 1500
 #define SCREEN_HEIGHT 800
+//sf::VideoMode::GetDesktopMode();
 
 sf::ContextSettings settings(24, 8, 8, 2, 0);
 sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Prototype", sf::Style::Close, settings);

@@ -7,6 +7,8 @@
 #include "Tile.h"
 #include <memory>
 
+#include <SFML/Audio.hpp>
+
 class Game : public mor::WorldManager{
 
 private:
@@ -33,7 +35,7 @@ private:
 	bool TileValidPlacement(glm::vec3 tile_pos);
 	//logic test
 	bool CheckTiles();
-	bool TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation);
+	bool TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation, std::vector<Tile*> _tiles);
 	void AdjustCamera();
 
 	void AddChatMessage(std::string _message, bool incoming_message);
@@ -52,5 +54,7 @@ public:
 
 	void Update(float _delta, sf::RenderWindow *_window);
 	void Render(sf::RenderWindow *_window);
+
+	void LoadAudio();
 };
 

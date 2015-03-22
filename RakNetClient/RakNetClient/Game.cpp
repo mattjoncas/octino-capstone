@@ -4,24 +4,36 @@ mor::GameObject *cube;
 mor::Camera *camera;
 mor::Light *white_light;
 std::vector<mor::GameObject*> tiles;
+std::vector<mor::GameObject*> menu_objects;
 mor::GameObject *tile_cursor;
-mor::GameObject *menu_tile, *tile_num;
 
 float t = 0.0f;
 float tile_rotation = 0.0f;
 int selected_tile, hand_position, tiles_placed, m_hand_count, c_hand_count;
 //materials
-int blue, soft_green, gold, orange, chrome, red;
+int soft_green, red;
 int tile_model, texture_shader;
 
 bool inGame = false, inLobby = false, isReady = false, puzzle_mode = false;
 
 //gui && networking 
 gui::GUIManager gManager = gui::GUIManager(true);
-int game_hud, main_menu, network_menu, lobby;
+int game_hud, main_menu, network_menu, lobby, create_id_menu;
 
 NetworkManager nManager = NetworkManager();
 
+//audio
+sf::SoundBuffer s_buffer;
+sf::Sound select_sound;
+sf::Music music;
+std::vector<std::string> songs;
+bool play_music = true;
+
+sf::Color header = sf::Color(85, 110, 48, 255);
+sf::Color text = sf::Color(85, 110, 48, 255);
+sf::Color b_main = sf::Color(114, 156, 52, 255);
+sf::Color b_hover = sf::Color(153, 238, 29, 255);
+sf::Color b_click = sf::Color(138, 202, 46, 255);
 sf::Color e_main = sf::Color(220, 73, 50, 255);
 sf::Color e_hover = sf::Color(255, 61, 31, 255);
 sf::Color e_click = sf::Color(170, 72, 57, 255);
@@ -33,12 +45,13 @@ Game::~Game(){
 	for (std::vector<mor::GameObject*>::iterator iter = tiles.begin(); iter != tiles.end(); ++iter){
 		delete((*iter));
 	}
+	for (std::vector<mor::GameObject*>::iterator iter = menu_objects.begin(); iter != menu_objects.end(); ++iter){
+		delete((*iter));
+	}
 
 	delete(camera);
-
-	//delete(players);
+	
 	delete(tile_cursor);
-	delete(menu_tile);
 }
 
 void Game::Load(){
@@ -51,18 +64,14 @@ void Game::Load(){
 	renderer.SetCamera(camera);
 	renderer.AddLight(white_light);
 
-	blue = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.0, 0.83, 1.0, 1.0), glm::vec4(0.5, 0.5, 0.5, 1.0), 25.0f); //BLUE
 	soft_green = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.387, 0.528, 0.086, 1.0), glm::vec4(0.0, 0.0, 0.0, 1.0), 25.0f); //SOFT GREEN [no spec]
-	gold = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.31, 0.216, 0.095, 1.0), glm::vec4(1.0, 0.726, 0.181, 1.0), 1.0f); //GOLD
-	orange = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(1.0, 0.368, 0.029, 1.0), glm::vec4(0.638, 1.0, 0.2, 1.0), 50.0f);
-	chrome = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.05, 0.05, 0.05, 1.0), glm::vec4(0.5, 0.0, 0.0, 1.0), 1.0f);
 	red = renderer.LoadMaterial(glm::vec4(1.0, 1.0, 1.0, 1.0), glm::vec4(0.886, 0.113, 0.113, 1.0), glm::vec4(0.1, 0.1, 0.1, 1.0), 25.0f);
 
-	cube = new mor::GameObject(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(glm::radians(0.0f)), glm::vec3(70.0f, 70.0f, 1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+	cube = new mor::GameObject(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(glm::radians(0.0f)), glm::vec3(112.0f, 70.0f, 1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
 	cube->Init(renderer.LoadModel("cube"), NULL, NULL, NULL);
-	cube->shader = renderer.LoadShader("normal_texture_vert.glsl", "normal_texture_frag.glsl");
-	cube->texture = renderer.LoadTexture("blank.png");
-	cube->normal_map = renderer.LoadTexture("normal.png");
+	cube->shader = renderer.LoadShader("texture_vert.glsl", "texture_frag.glsl");
+	cube->texture = renderer.LoadTexture("background_test.png");
+	//cube->normal_map = renderer.LoadTexture("normal.png");
 	cube->bounding_shape = new AABox(cube->position, cube->scale.x, cube->scale.y, cube->scale.z);
 
 	objects.push_back(cube);
@@ -77,16 +86,21 @@ void Game::Load(){
 	mor::GameObject *cursor_num = new mor::GameObject(glm::vec3(0.0f, 0.0f, 0.1f), glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
 	tile_cursor->AddChild(cursor_num);
 
-	menu_tile = new mor::GameObject(glm::vec3(2.0f, 0.0f, -1.2f), glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 5.0f, 0.0f));
-	//menu_tile->Init(tile_model, texture_shader, renderer.LoadTexture("tile09.png"), NULL); <-WHY IS THIS BROKEN!!?
-	menu_tile->model = tile_model;
-	menu_tile->material = renderer.LoadMaterial(glm::vec4(1.0), glm::vec4(0.8, 0.8, 0.8, 1.0), glm::vec4(0.25, 0.25, 0.25, 1.0), 100.0f);
+	for (int y = 0; y < 5; y++){
+		for (int x = 0; x < 5; x++){
+			menu_objects.push_back(new mor::GameObject(glm::vec3(x * 5 - 2 * 5, y * 3 - 2 * 3, -15.0f), glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+			//menu_tile->Init(tile_model, texture_shader, renderer.LoadTexture("tile09.png"), NULL); <-WHY IS THIS BROKEN!!?
+			menu_objects[menu_objects.size() - 1]->model = tile_model;
+			menu_objects[menu_objects.size() - 1]->material = renderer.LoadMaterial(glm::vec4(1.0), glm::vec4(0.8, 0.8, 0.8, 1.0), glm::vec4(0.25, 0.25, 0.25, 1.0), 100.0f);
 
-	tile_num = new mor::GameObject(glm::vec3(0.0f, 0.0f, 0.1f), glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
-	tile_num->model = renderer.LoadModel("9");
-	menu_tile->AddChild(tile_num);
-
+			mor::GameObject *tile_num = new mor::GameObject(glm::vec3(0.0f, 0.0f, 0.1f), glm::vec3(glm::radians(-90.0f), 0.0f, 0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f));
+			int n = rand() % 10;
+			tile_num->model = renderer.LoadModel(std::to_string(n));
+			menu_objects[menu_objects.size() - 1]->AddChild(tile_num);
+		}
+	}
 	LoadGUI();
+	LoadAudio();
 
 	players = nManager.GetClients(); //players point to nManager's clients
 	selected_tile = -1;
@@ -95,50 +109,60 @@ void Game::Load(){
 	tiles_placed = 0;
 }
 void Game::LoadGUI(){
-	sf::Color header = sf::Color(85, 110, 48, 255);
-	sf::Color text = sf::Color(85, 110, 48, 255);
-	sf::Color b_main = sf::Color(114, 156, 52, 255);
-	sf::Color b_hover = sf::Color(153, 238, 29, 255);
-	sf::Color b_click = sf::Color(138, 202, 46, 255);
 
 	main_menu = gManager.AddMenu();
-	gManager.AddText(network_menu, "title", renderer.ScreenWidth() / 2, 30, true, "Octino", header, "SG14.ttf", 120);
-	gManager.AddButton(main_menu, "network_button", 400, 75, renderer.ScreenWidth() * 0.33, renderer.ScreenHeight() * 0.30, true, "Network", b_main, b_hover, b_click, "alagard.ttf");
-	gManager.AddButton(main_menu, "offline_button", 400, 75, renderer.ScreenWidth() * 0.33, renderer.ScreenHeight() * 0.30 + 100, true, "Offline", b_main, b_hover, b_click, "8-Bit-Madness.ttf");
-	gManager.AddButton(main_menu, "puzzle_button", 400, 75, renderer.ScreenWidth() * 0.33, renderer.ScreenHeight() * 0.30 + 200, true, "Puzzle", b_main, b_hover, b_click, "8-Bit-Madness.ttf");
-	gManager.AddButton(main_menu, "quit_button", 400, 75, renderer.ScreenWidth() * 0.33, renderer.ScreenHeight() * 0.30 + 300, true, "Quit", b_main, b_hover, b_click, "8-Bit-Madness.ttf");
+	gManager.AddText(main_menu, "title", renderer.ScreenWidth() / 2, 30, true, "Octino", header, "SG14.ttf", 120, 2.5f);
+	gManager.AddButton(main_menu, "network_button", 400, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.30, true, "Network", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(main_menu, "offline_button", 400, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.30 + 100, true, "Offline", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(main_menu, "puzzle_button", 400, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.30 + 200, true, "Puzzle", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(main_menu, "quit_button", 400, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.30 + 300, true, "Quit", b_main, b_hover, b_click, "alagard.ttf");
+
+	gManager.AddButton(network_menu, "music_button", 75, 70, 10, renderer.ScreenHeight() - 80, false, "M", e_main, e_hover, e_click, "SG14.ttf");
 
 	network_menu = gManager.AddMenu();
 	int y_offset = renderer.ScreenHeight() * 0.1;
-	gManager.AddText(network_menu, "id_text", renderer.ScreenWidth() / 2, 0 + y_offset, true, "Enter your ID", text, "alagard.ttf", 50);
+	gManager.AddText(network_menu, "id_text", renderer.ScreenWidth() / 2, 0 + y_offset, true, "Enter your ID", text, "alagard.ttf", 50, NULL);
 	gManager.AddTextBox(network_menu, "id_text_box", 420, 80, renderer.ScreenWidth() / 2, 70 + y_offset, true, "", b_click, "alagard.ttf");
 
-	gManager.AddText(network_menu, "pass_text", renderer.ScreenWidth() / 2, 150 + y_offset, true, "Password", text, "alagard.ttf", 50);
+	gManager.AddText(network_menu, "pass_text", renderer.ScreenWidth() / 2, 150 + y_offset, true, "Password", text, "alagard.ttf", 50, NULL);
 	gManager.AddTextBox(network_menu, "pass_text_box", 420, 80, renderer.ScreenWidth() / 2, 220 + y_offset, true, "", b_click, "alagard.ttf");
 	gManager.SetTextBoxHidden("pass_text_box", true);
-	gManager.AddText(network_menu, "lobby_text", renderer.ScreenWidth() / 2, 300 + y_offset, true, "Enter Lobby to Create/Join", text, "alagard.ttf", 50);
+	gManager.AddText(network_menu, "lobby_text", renderer.ScreenWidth() / 2, 300 + y_offset, true, "Enter Lobby to Create/Join", text, "alagard.ttf", 50, NULL);
 	gManager.AddTextBox(network_menu, "lobby_text_box", 420, 80, renderer.ScreenWidth() / 2, 370 + y_offset, true, "", b_click, "alagard.ttf");
-	gManager.AddButton(network_menu, "connect_button", 500, 75, renderer.ScreenWidth() / 2, 600 + y_offset, true, "Connect", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(network_menu, "connect_button", 400, 75, renderer.ScreenWidth() * 0.33, 600 + y_offset, true, "Connect", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(network_menu, "back_button", 400, 75, renderer.ScreenWidth() * 0.66, 600 + y_offset, true, "Back", b_main, b_hover, b_click, "alagard.ttf");
 	gManager.AddButton(network_menu, "random_button", 75, 70, renderer.ScreenWidth() / 2 + 245, 375 + y_offset, false, "?", b_main, b_hover, b_click, "SG14.ttf");
 
-	gManager.AddText(network_menu, "menu_message", renderer.ScreenWidth() / 2, 500 + y_offset, true, " ", e_main, "alagard.ttf", 40);
+	gManager.AddButton(network_menu, "new_button", 75, 70, renderer.ScreenWidth() / 2 + 245, 75 + y_offset, false, "!", b_main, b_hover, b_click, "SG14.ttf");
+	gManager.AddText(network_menu, "menu_message", renderer.ScreenWidth() / 2, 500 + y_offset, true, " ", e_main, "alagard.ttf", 40, NULL);
+
+	create_id_menu = gManager.AddMenu();
+	
+	gManager.AddText(create_id_menu, "title", renderer.ScreenWidth() / 2, y_offset / 2, true, "Create New ID", header, "SG14.ttf", 70, NULL);
+	gManager.AddText(create_id_menu, "id_text", renderer.ScreenWidth() / 2, 0 + y_offset * 2, true, "Enter your ID", text, "alagard.ttf", 50, NULL);
+	gManager.AddTextBox(create_id_menu, "id_text_box", 420, 80, renderer.ScreenWidth() / 2, 70 + y_offset * 2, true, "", b_click, "alagard.ttf");
+	gManager.AddText(create_id_menu, "pass_text", renderer.ScreenWidth() / 2, 150 + y_offset * 2, true, "Password", text, "alagard.ttf", 50, NULL);
+	gManager.AddTextBox(create_id_menu, "pass_text_box", 420, 80, renderer.ScreenWidth() / 2, 220 + y_offset * 2, true, "", b_click, "alagard.ttf");
+	gManager.SetTextBoxHidden("pass_text_box", true);
+	gManager.AddButton(create_id_menu, "create_button", 400, 75, renderer.ScreenWidth() * 0.33, 600 + y_offset, true, "Create", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddButton(create_id_menu, "back_button", 400, 75, renderer.ScreenWidth() * 0.66, 600 + y_offset, true, "Back", b_main, b_hover, b_click, "alagard.ttf");
+	gManager.AddText(create_id_menu, "menu_message", renderer.ScreenWidth() / 2, 450 + y_offset, true, " ", e_main, "alagard.ttf", 50, NULL);
 
 	lobby = gManager.AddMenu();
 
-	gManager.AddButton(lobby, "ready_button", 500, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() - 100, true, "Ready Up", b_main, b_hover, b_click, "8-Bit-Madness.ttf");
+	gManager.AddButton(lobby, "ready_button", 500, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() - 100, true, "Ready Up", b_main, b_hover, b_click, "alagard.ttf");
 	gManager.AddButton(lobby, "leave_button", 75, 75, renderer.ScreenWidth() - 100, 25, false, "X", e_main, e_hover, e_click, "SG14.ttf");
-	gManager.AddText(lobby, "client01", renderer.ScreenWidth() / 2, (0 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50);
-	gManager.AddText(lobby, "client02", renderer.ScreenWidth() / 2, (1 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50);
-	gManager.AddText(lobby, "client03", renderer.ScreenWidth() / 2, (2 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50);
-	gManager.AddText(lobby, "client04", renderer.ScreenWidth() / 2, (3 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50);
+	gManager.AddText(lobby, "client01", renderer.ScreenWidth() / 2, (0 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50, NULL);
+	gManager.AddText(lobby, "client02", renderer.ScreenWidth() / 2, (1 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50, NULL);
+	gManager.AddText(lobby, "client03", renderer.ScreenWidth() / 2, (2 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50, NULL);
+	gManager.AddText(lobby, "client04", renderer.ScreenWidth() / 2, (3 * 40) + renderer.ScreenHeight() * 0.33, true, "", b_click, "8-Bit-Madness.ttf", 50, NULL);
 
 	game_hud = gManager.AddMenu();
-
-	gManager.AddText(game_hud, "lobby_count", renderer.ScreenWidth() / 2, 0, true, "0", text, "alagard.ttf", 50);
-	gManager.AddText(game_hud, "client01", 5, (0 * 40), false, "", header, "alagard.ttf", 50);
-	gManager.AddText(game_hud, "client02", 5, (1 * 40), false, "", header, "8-Bit-Madness.ttf", 50);
-	gManager.AddText(game_hud, "client03", 5, (2 * 40), false, "", header, "8-Bit-Madness.ttf", 50);
-	gManager.AddText(game_hud, "client04", 5, (3 * 40), false, "", header, "alagard.ttf", 50);
+	
+	gManager.AddText(game_hud, "client01", renderer.ScreenWidth() / 2, (0 * 40), true, "", header, "alagard.ttf", 50, NULL);
+	gManager.AddText(game_hud, "client02", renderer.ScreenWidth() / 2, (1 * 40), true, "", header, "alagard.ttf", 50, NULL);
+	gManager.AddText(game_hud, "client03", renderer.ScreenWidth() / 2, (2 * 40), true, "", header, "alagard.ttf", 50, NULL);
+	gManager.AddText(game_hud, "client04", renderer.ScreenWidth() / 2, (3 * 40), true, "", header, "alagard.ttf", 50, NULL);
 
 	gManager.AddTextBox(game_hud, "text_box", 300, 40, 0, renderer.ScreenHeight() - 40, false, "type here.", b_click, "TF2.ttf");
 
@@ -165,7 +189,7 @@ void Game::Render(sf::RenderWindow *_window){
 	case NetworkManager::GameState::MAIN_MENU:
 		//main menu
 		renderer.ShadowMapPass(objects);
-		renderer.Render(menu_tile);
+		renderer.Render(menu_objects);
 	case NetworkManager::GameState::NETWORK_MENU:
 		//network menu
 		break;
@@ -196,15 +220,26 @@ void Game::Update(float _delta){
 		//white_light->SetPosition(glm::vec4(camera->pos, 1.0f));
 	}
 	else{
-		menu_tile->Update(_delta);
+		for (int i = 0; i < menu_objects.size(); i++){
+			menu_objects[i]->Update(_delta);
+		}
 	}
 }
 void Game::Update(float _delta, sf::RenderWindow *_window){
+	if (music.getStatus() == sf::Music::Stopped && play_music){
+		int s = rand() % songs.size();
+		music.openFromFile("audio/" + songs[s]);
+		music.play();
+	}
 	Update(_delta);
 	nManager.Update(_delta);
 	std::string _message = nManager.GetServerMessage();
 	if (_message != ""){
 		gManager.SetText("menu_message", _message);
+		if (_message == "Account created."){
+			gManager.SetText("id_text_box", "");
+			gManager.SetText("pass_text_box", "");
+		}
 	}
 	gManager.Update(_window, _delta);
 	sf::Event event;
@@ -224,19 +259,25 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 					isRunning = false;
 				}
 				break;
+			case sf::Event::MouseMoved:
+				glm::vec3 _rr = Raycast(event.mouseMove.x, event.mouseMove.y);
+				glm::quat q = glm::quat(glm::lookAt(camera->pos, _rr, camera->up));
+				for (int i = 0; i < menu_objects.size(); i++){
+					menu_objects[i]->SetRotation(q);
+				}
+				break;
 			}
 			if (gManager.PollEvent(g_event)){
+				select_sound.play();
 				if (g_event.name == "network_button"){
 					nManager.state = NetworkManager::GameState::NETWORK_MENU;
 					gManager.BindMenu(network_menu);
 					gManager.Select("id_text_box");
 					gManager.SetText("menu_message", nManager.Connect());
-					menu_tile->SetActive(false);
 				}
 				if (g_event.name == "offline_button"){
 					nManager.state = NetworkManager::GameState::IN_GAME;
 					gManager.BindMenu(game_hud);
-					menu_tile->SetActive(false);
 				}
 				if (g_event.name == "puzzle_button"){
 					nManager.state = NetworkManager::GameState::IN_GAME;
@@ -244,13 +285,29 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 					gManager.SetActive("end_button", false);
 					gManager.SetActive("text_box", false);
 					puzzle_mode = true;
-					menu_tile->SetActive(false);
 					GeneratePuzzle();
 					AdjustCamera();
+
+					gManager.SetText("client01", "");
+					gManager.SetText("client02", "");
+					gManager.SetText("client03", "");
+					gManager.SetText("client04", "");
 				}
 				if (g_event.name == "quit_button"){
 					nManager.Disconnect();
 					isRunning = false;
+				}
+				if (g_event.name == "music_button"){
+					if (play_music){
+						play_music = false;
+						music.stop();
+					}
+					else{
+						play_music = true;
+						int s = rand() % songs.size();
+						music.openFromFile("audio/" + songs[s]);
+						music.play();
+					}
 				}
 			}
 			if (camera->pos != glm::vec3(0.0f, 0.0f, 5.0f)){
@@ -258,6 +315,9 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			}
 			break;
 	case NetworkManager::GameState::NETWORK_MENU:
+		if (!nManager.IsConnected()){
+			gManager.SetText("menu_message", "Not connected to server.");
+		}
 		while (_window->pollEvent(event)){
 			switch (event.type){
 			case sf::Event::Closed:
@@ -266,11 +326,25 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 				isRunning = false;
 				break;
 			case sf::Event::TextEntered:
-				if (event.text.unicode < 128 && event.text.unicode != 8 && event.text.unicode != 13){
+				if (event.text.unicode < 128 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 9){
 					gManager.TextBoxInput(static_cast<char>(event.text.unicode));
 				}
 				else if (event.text.unicode == 8){
 					gManager.TextBoxInput(NULL);
+				}
+				else if (event.text.unicode == 9){
+					if (gManager.IsSelected("id_text_box")){
+						gManager.Unselect();
+						gManager.Select("pass_text_box");
+					}
+					else if (gManager.IsSelected("pass_text_box")){
+						gManager.Unselect();
+						gManager.Select("lobby_text_box");
+					}
+					else if (gManager.IsSelected("lobby_text_box")){
+						gManager.Unselect();
+						gManager.Select("id_text_box");
+					}
 				}
 				break;
 			case sf::Event::KeyPressed:
@@ -286,23 +360,87 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			}
 		}
 		if (gManager.PollEvent(g_event)){
-			if (g_event.name == "connect_button"){
+			select_sound.play();
+			if (g_event.name == "new_button" && nManager.IsConnected()){
+				nManager.state = NetworkManager::CREATE_ID_MENU;
+				gManager.BindMenu(create_id_menu);
+				gManager.Select("id_text_box");
+				gManager.SetText("menu_message", "Enter new id / password.");
+			}
+			if (g_event.name == "connect_button" && nManager.IsConnected()){
 				gManager.SetText("menu_message", nManager.Join(gManager.GetText("id_text_box"), gManager.GetText("pass_text_box"), gManager.GetText("lobby_text_box")));
 			}
-			if (g_event.name == "random_button"){
+			if (g_event.name == "back_button"){
+				nManager.state = NetworkManager::MAIN_MENU;
+				nManager.Disconnect();
+				gManager.SetText("lobby_text_box", "");
+				gManager.SetText("pass_text_box", "");
+				gManager.BindMenu(main_menu);
+				white_light->SetPosition(glm::vec3(0.0f, 0.0f, 40.0f));
+			}
+			else if (g_event.name == "connect_button" && !nManager.IsConnected()){
+				gManager.SetText("menu_message", nManager.Connect());
+			}
+			if (g_event.name == "random_button" && nManager.IsConnected()){
 				//join random lobby
 				gManager.SetText("lobby_text_box", nManager.GetRandomLobby());
 				if (gManager.GetText("lobby_text_box") == ""){
 					gManager.SetText("menu_message", "No lobbies available.");
 				}
 			}
+			
+		}
+		break;
+	case NetworkManager::GameState::CREATE_ID_MENU:
+		while (_window->pollEvent(event)){
+			switch (event.type){
+			case sf::Event::Closed:
+				//try to disconnect
+				nManager.Disconnect();
+				isRunning = false;
+				break;
+			case sf::Event::TextEntered:
+				if (event.text.unicode < 128 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 9){
+					gManager.TextBoxInput(static_cast<char>(event.text.unicode));
+				}
+				else if (event.text.unicode == 8){
+					gManager.TextBoxInput(NULL);
+				}
+				else if (event.text.unicode == 9){
+					if (gManager.IsSelected("id_text_box")){
+						gManager.Unselect();
+						gManager.Select("pass_text_box");
+					}
+					else if (gManager.IsSelected("pass_text_box")){
+						gManager.Unselect();
+						gManager.Select("id_text_box");
+					}
+				}
+				break;
+			case sf::Event::KeyPressed:
+				if (event.key.code == sf::Keyboard::Return){
+					gManager.SetText("menu_message", nManager.CreateNewID(gManager.GetText("id_text_box"), gManager.GetText("pass_text_box")));
+				}
+				break;
+			}
+		}
+		if (gManager.PollEvent(g_event)){
+			select_sound.play();
+			if (g_event.name == "create_button"){
+				gManager.SetText("menu_message", nManager.CreateNewID(gManager.GetText("id_text_box"), gManager.GetText("pass_text_box")));
+			}
+			if (g_event.name == "back_button"){
+				nManager.state = NetworkManager::GameState::NETWORK_MENU;
+				gManager.BindMenu(network_menu);
+				gManager.Select("id_text_box");
+			}
 		}
 		break;
 	case NetworkManager::GameState::IN_LOBBY:
 		if (!inLobby){
-			_window->setTitle(gManager.GetText("id_text_box") + " :: " + gManager.GetText("lobby_text_box"));
 			gManager.BindMenu(lobby);
 			inLobby = true;
+			nManager.UpdateServer(camera->pos, m_hand_count);
 		}
 		while (_window->pollEvent(event)){
 			switch (event.type){
@@ -339,8 +477,10 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			}
 		}
 		if (gManager.PollEvent(g_event)){
+			select_sound.play();
 			if (g_event.name == "ready_button"){
 				nManager.ReadyUp();
+				nManager.UpdateServer(camera->pos, 7);
 			}
 			if (g_event.name == "leave_button"){
 				nManager.Disconnect();
@@ -349,7 +489,7 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 				gManager.SetText("lobby_text_box", "");
 				gManager.SetText("menu_message", "");
 				gManager.BindMenu(main_menu);
-				menu_tile->SetActive(true);
+				white_light->SetPosition(glm::vec3(0.0f, 0.0f, 40.0f));
 			}
 		}
 		break;
@@ -359,6 +499,7 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			white_light->SetPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 			
 			if (!puzzle_mode){
+				inLobby = false;
 				gManager.BindMenu(game_hud);
 				EmptyHand();
 				FillHand(7);
@@ -494,6 +635,7 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			if (gManager.PollEvent(g_event)){
 				if (g_event.name == "end_button" && tiles_placed > 0){
 					SendTiles();
+					nManager.UpdateServer(camera->pos, c_hand_count);
 				}
 				for (int i = 0; i < m_hand_count; i++){
 					if (g_event.name == "hand0" + std::to_string(i)){
@@ -504,27 +646,37 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 						}
 					}
 				}
+				if (g_event.name == "temp_button"){
+					gManager.RemoveObject(game_hud, "temp_button");
+					gManager.RemoveObject(game_hud, "temp_text");
+
+					inGame = false;
+					nManager.state = NetworkManager::GameState::IN_LOBBY;
+					gManager.BindMenu(lobby);
+				}
 			}
 			std::string new_message = nManager.GetPendingChatMessage();
 			if (new_message.size() > 0){
 				AddChatMessage(new_message, true);
 			}
 			if (nManager.UpdateClients()){
-				CheckTiles();
 				for (int i = 0; i < 4; i++){
 					if (i < players->size()){
 						if (players->at(i).IsTurn()){
-							gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID() + " <-");
+							gManager.SetActive("client0" + std::to_string(i + 1), true);
+							gManager.SetText("client0" + std::to_string(i + 1), "> " + players->at(i).ID() + " <");
+							gManager.SetPosition("client0" + std::to_string(i + 1), sf::Vector2f(renderer.ScreenWidth() / 2, 0));
 						}
 						else{
 							gManager.SetText("client0" + std::to_string(i + 1), players->at(i).ID());
+							gManager.SetActive("client0" + std::to_string(i + 1), false);
 						}
 					}
 					else{
 						gManager.SetText("client0" + std::to_string(i + 1), "*empty*");
+						gManager.SetActive("client0" + std::to_string(i + 1), false);
 					}
 				}
-				gManager.SetText("lobby_count", std::to_string(nManager.GetLobbyCount()));
 
 				if (nManager.is_turn){
 					gManager.SetActive("end_button", true);
@@ -536,6 +688,17 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 			}
 			if (tiles_placed == 0){
 				gManager.SetActive("end_button", false);
+			}
+			if (nManager.game_done){
+				if (c_hand_count == 0){
+					gManager.AddText(game_hud, "temp_text", renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.33, true, "you win!", sf::Color::Black, "SG14.ttf", 100, 1.0f);
+				}
+				else{
+					gManager.AddText(game_hud, "temp_text", renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.33, true, "you lose!", sf::Color::Black, "SG14.ttf", 100, 1.0f);
+				}
+				gManager.AddButton(game_hud, "temp_button", 500, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() / 2 + 200, true, "Done", b_main, b_hover, b_click, "alagard.ttf");
+
+				nManager.game_done = false;
 			}
 		}
 		else{
@@ -619,6 +782,7 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 								}
 								delete(tiles[tiles.size() - 1]);
 								tiles.erase(tiles.end() - 1);
+								CheckTiles();
 							}
 						}
 						break;
@@ -684,14 +848,9 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 										}
 									}
 									if (!single_test){
-										gManager.SetActive("end_button", true);
-										gManager.SetActive("text_box", true);
-										nManager.state = NetworkManager::GameState::MAIN_MENU;
-										gManager.BindMenu(main_menu);
-										menu_tile->SetActive(true);
-										inGame = false;
-										camera->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-										white_light->SetPosition(glm::vec3(00.0f, 0.0f, 40.0f));
+										gManager.AddText(game_hud, "temp_text", renderer.ScreenWidth() / 2, renderer.ScreenHeight() * 0.33, true, "Puzzle Solved!", sf::Color::Black, "SG14.ttf", 100, 1.0f);
+										gManager.AddButton(game_hud, "temp_c_button", 500, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() / 2 + 75, true, "Continue", b_main, b_hover, b_click, "alagard.ttf");
+										gManager.AddButton(game_hud, "temp_e_button", 500, 75, renderer.ScreenWidth() / 2, renderer.ScreenHeight() / 2 + 200, true, "Done", b_main, b_hover, b_click, "alagard.ttf");
 									}
 								}
 							}
@@ -747,11 +906,11 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 							}
 						}
 						if (event.key.code == sf::Keyboard::P){
+							puzzle_mode = false;
 							gManager.SetActive("end_button", true);
 							gManager.SetActive("text_box", true);
 							nManager.state = NetworkManager::GameState::MAIN_MENU;
 							gManager.BindMenu(main_menu);
-							menu_tile->SetActive(true);
 							inGame = false;
 							camera->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 							white_light->SetPosition(glm::vec3(00.0f, 0.0f, 40.0f));
@@ -771,6 +930,26 @@ void Game::Update(float _delta, sf::RenderWindow *_window){
 								hand_position = i;
 							}
 						}
+					}
+					if (g_event.name == "temp_e_button"){
+						gManager.RemoveObject(game_hud, "temp_text");
+						gManager.RemoveObject(game_hud, "temp_c_button");
+						gManager.RemoveObject(game_hud, "temp_e_button");
+						gManager.SetActive("end_button", true);
+						gManager.SetActive("text_box", true);
+						puzzle_mode = false;
+						nManager.state = NetworkManager::GameState::MAIN_MENU;
+						gManager.BindMenu(main_menu);
+						inGame = false;
+						camera->SetPosition(glm::vec3(0.0f, 0.0f, 5.0f));
+						white_light->SetPosition(glm::vec3(00.0f, 0.0f, 40.0f));
+					}
+					if (g_event.name == "temp_c_button"){
+						gManager.RemoveObject(game_hud, "temp_text");
+						gManager.RemoveObject(game_hud, "temp_c_button");
+						gManager.RemoveObject(game_hud, "temp_e_button");
+						GeneratePuzzle();
+						AdjustCamera();
 					}
 				}
 			}
@@ -831,7 +1010,7 @@ glm::vec3 Game::Raycast(float mouseX, float mouseY){
 
 	Ray r = Ray(camera->pos, glm::normalize(mts - camera->pos), 0.0f);
 	r.Intersects(*dynamic_cast<AABox*>(cube->bounding_shape));
-
+	
 	if (tiles.size() > 0){
 		float dist = 100.0f;
 		glm::vec3 final;
@@ -937,7 +1116,12 @@ void Game::FillHand(int hand_size){
 		gManager.AddButton(game_hud, "hand0" + std::to_string(i), 60, 60, renderer.ScreenWidth() * 0.33 + 70 * i, renderer.ScreenHeight() - 70, false, std::to_string(i), e_main, e_hover, e_click, "alagard.ttf");
 	}
 	for (int i = 0; i < m_hand_count; i++){
-		hand.push_back(rand() % 10);
+		if (nManager.IsConnected()){
+			hand.push_back(rand() % 10);
+		}
+		else{
+			hand.push_back(i);
+		}
 		gManager.SetText("hand0" + std::to_string(i), std::to_string(hand[i]));
 	}
 }
@@ -952,6 +1136,10 @@ void Game::EmptyHand(){
 bool Game::CheckTiles(){
 	for (int i = 0; i < tiles.size(); i++){
 		tiles[i]->material = 0;
+		Tile *t = dynamic_cast<Tile*>(tiles[i]);
+		for (int l = 0; l < 4; l++){
+			t->solved[l] = false;
+		}
 	}
 	if (tiles.size() > 1){
 		//check each tile
@@ -964,25 +1152,49 @@ bool Game::CheckTiles(){
 				if (p >= 8){ p -= 8; }
 				//check for NULL
 				if (t->GetAdjacentTile(a)){
+					std::vector<Tile*> _tiles;
 					std::vector<int> equation;
 					equation.push_back(t->GetAdjacentTile(a)->GetValue());
 					std::vector<int> e;
 					e.push_back(t->GetValue());
 					
-					if (!TilePass(t, t->GetAdjacentTile(a), p, equation) && !TilePass(t->GetAdjacentTile(a), t, a, e)){
-						t->material = red;
-						t->GetAdjacentTile(a)->material = red;
-
-						bad_placement = true;
+					if (TilePass(t, t->GetAdjacentTile(a), p, equation, _tiles)){
+						t->solved[a / 2] = true;
+						t->GetAdjacentTile(a)->solved[a / 2] = true;
 					}
-					else{
-						t->material = 0;
-						t->GetAdjacentTile(a)->material = 0;
+					
+					//else{
+						//t->material = 0;
+						//t->GetAdjacentTile(a)->material = 0;
+					//}
+				}
+			}
+		}
+		for (int i = 0; i < tiles.size(); i++){
+			Tile *t = dynamic_cast<Tile*>(tiles[i]);
+			bool need_check = false;
+			for (int a = 0; a < 7; a += 2){
+				if (t->GetAdjacentTile(a)){
+					need_check = true;
+					break;
+				}
+			}
+			if (need_check){
+				int s_count = 0;
+				for (int l = 0; l < 4; l++){
+					if (t->solved[l]){
+						s_count++;
+						break;
 					}
+				}
+				if (s_count == 0){
+					bad_placement = true;
+					t->material = red;
 				}
 			}
 		}
 		if (bad_placement){
+			printf("BAD!\n");
 			return false;
 		}
 		else{
@@ -990,8 +1202,9 @@ bool Game::CheckTiles(){
 		}
 	}
 }
-bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation){
-	bool test = false;
+bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation, std::vector<Tile*> _tiles){
+	_tiles.push_back(a_tile);
+	bool test = true;
 	bool corners = false;
 	for (int i = 1; i < 8; i+=2){
 		if (i != previous_index){
@@ -1007,7 +1220,11 @@ bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<
 				if (operation < -4){ operation += 4; }
 				_equation.push_back(operation);
 				_equation.push_back(a_tile->GetAdjacentTile(i)->GetValue());
-				test = TilePass(i_tile, a_tile->GetAdjacentTile(i), p, _equation);
+				if (!TilePass(i_tile, a_tile->GetAdjacentTile(i), p, _equation, _tiles)){
+					test = false;
+				}
+				_equation.clear();
+				_equation.push_back(a_tile->GetValue());
 				corners = true;
 			}
 		}
@@ -1046,7 +1263,6 @@ bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<
 				r_final *= _equation[i - 1];
 			}
 		}
-		/*
 		//print test
 		std::cout << i_tile->GetValue() << " = " << _equation[0];
 		for (int i = 1; i < _equation.size(); i++){
@@ -1066,22 +1282,35 @@ bool Game::TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<
 				std::cout << _equation[i];
 			}
 		}
-		std::cout << " \n";*/
-		if (i_tile->GetValue() != l_final && i_tile->GetValue() != r_final){
-			//printf("conflict: %i != %f || %f \n", i_tile->GetValue(), l_final, r_final);
+		std::cout << " \n";
+		if (i_tile->GetValue() != r_final && _equation.size() != 1){
+		//if (i_tile->GetValue() != l_final && i_tile->GetValue() != r_final){
+			//printf("conflict: %i != %f \n", i_tile->GetValue(), r_final);
 			return false;
 		}
-		//bug fix test
-		bool c_test = false;
-		for (int i = 1; i < 8; i += 2){
-			if (i_tile->GetAdjacentTile(i)){
-				//printf("ADJACENT PASSS!!!\n");
-				c_test = true;
-				break;
+		//stop
+		if (_equation.size() == 1){
+			bool c_test = false;
+			for (int i = 1; i < 8; i += 2){
+				if (i_tile->GetAdjacentTile(i)){
+					c_test = true;
+					break;
+				}
 			}
-		}
-		if (_equation.size() == 1 && c_test){
-			//printf("NOT EQUAL!!\n");
+			for (int i = 1; i < 8; i += 2){
+				if (a_tile->GetAdjacentTile(i)){
+					if (c_test){
+						c_test = true;
+					}
+					break;
+				}
+			}
+			if (!c_test && i_tile->GetValue() != a_tile->GetValue()){
+				return false;
+			}
+			else if (!c_test && i_tile->GetValue() == a_tile->GetValue()){
+				return true;
+			}
 			return false;
 		}
 		return true;
@@ -1122,10 +1351,10 @@ void Game::AddChatMessage(std::string _message, bool incoming_message){
 	}
 	chat.push_back(_message);
 	if (incoming_message){
-		gManager.AddText(game_hud, "chat" + std::to_string(chat.size() - 1), 4, renderer.ScreenHeight() - 75, false, _message, sf::Color(9, 43, 106, 255), "TF2.ttf", 30);
+		gManager.AddText(game_hud, "chat" + std::to_string(chat.size() - 1), 4, renderer.ScreenHeight() - 75, false, _message, sf::Color(9, 43, 106, 255), "TF2.ttf", 30, NULL);
 	}
 	else{
-		gManager.AddText(game_hud, "chat" + std::to_string(chat.size() - 1), 4, renderer.ScreenHeight() - 75, false, _message, sf::Color(202, 33, 33, 255), "TF2.ttf", 30);
+		gManager.AddText(game_hud, "chat" + std::to_string(chat.size() - 1), 4, renderer.ScreenHeight() - 75, false, _message, sf::Color(202, 33, 33, 255), "TF2.ttf", 30, NULL);
 	}
 }
 
@@ -1159,6 +1388,7 @@ void Game::GeneratePuzzle(){
 			continue;
 		}
 		float a = 0, b = 0;
+		bool a_first = true;
 		int op;
 		test = false;
 		while (!test){
@@ -1166,11 +1396,11 @@ void Game::GeneratePuzzle(){
 			b = rand() % 10;
 
 			if (a + b == t->GetValue()){ test = true; op = 0; }
-			else if (a - b == t->GetValue()){ test = true; op = 1; }
+			else if (a - b == t->GetValue()){ test = true; a_first = false; op = 1; }
 			else if (b - a == t->GetValue()){ test = true; op = 1; }
 			else if (a * b == t->GetValue()){ test = true; op = 2; }
 			else if (b != 0){
-				if (a / b == t->GetValue()){ test = true; op = 3; }
+				if (a / b == t->GetValue()){ test = true; a_first = false; op = 3; }
 			}
 			else if (a != 0){
 				if (b / a == t->GetValue()){ test = true; op = 3; }
@@ -1202,32 +1432,33 @@ void Game::GeneratePuzzle(){
 			if (f != 0){
 				tile_rotation -= 90.0f;
 			}
-			//std::cout << a << ", " << b << " + ;";
 		}
 		else if (op == 1){
 			if (f != 0){
 				tile_rotation += 90.0f;
 			}
-			//std::cout << a << ", " << b << " - ;";
 		}
 		else if (op == 2){
 			if (f != 0){
 				tile_rotation += 90.0f;
 			}
-			//std::cout << a << ", " << b << " * ;";
 		}
 		else if (op == 3){
 			if (f != 0){
 				tile_rotation -= 90.0f;
 			}
-			//std::cout << a << ", " << b << " / ;";
 		}
 		//rotation clamp
 		if (tile_rotation >= 360.0f){ tile_rotation -= 360.0f; }
 		else if (tile_rotation < 0.0f){ tile_rotation += 360.0f; }
 		
 		if (TileValidPlacement(t->GetAdjacentPosition(tile_slot))){
-			AddTempTile(t->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), a);
+			if (a_first){
+				AddTempTile(t->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), a);
+			}
+			else{
+				AddTempTile(t->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), b);
+			}
 		}
 		else{
 			i--;
@@ -1240,10 +1471,14 @@ void Game::GeneratePuzzle(){
 		Tile* second_tile = dynamic_cast<Tile*>(tiles[tiles.size() - 1]);
 		tile_slot = second_tile->GetAdjacentIndex(op);
 		if (TileValidPlacement(second_tile->GetAdjacentPosition(tile_slot))){
-			if (AddTempTile(second_tile->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), b)){
-				
+			bool added;
+			if (a_first){
+				added = AddTempTile(second_tile->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), b);
 			}
 			else{
+				added = AddTempTile(second_tile->GetAdjacentPosition(tile_slot), glm::vec3(0.0f, 0.0f, glm::radians(tile_rotation)), a);
+			}
+			if (!added){
 				//remove both new tiles
 				dynamic_cast<Tile*>(tiles[tiles.size() - 1])->RemoveAdjacentTiles();
 				delete(tiles[tiles.size() - 1]);
@@ -1273,6 +1508,7 @@ void Game::GeneratePuzzle(){
 			continue;
 		}
 	}
+	
 	//remove some random tiles
 	std::vector<int> tiles_removed;
 	for (int i = 0; i < puzzle_size * 2 - puzzle_size; i++){
@@ -1296,4 +1532,25 @@ void Game::GeneratePuzzle(){
 		tiles[i]->material = 0;
 	}
 	printf("Puzzle generated!\n");
+}
+
+void Game::LoadAudio(){
+	if (!s_buffer.loadFromFile("audio/sound1.wav")){
+		printf("error loading sound\n");
+	}
+	select_sound.setBuffer(s_buffer);
+
+	songs.push_back("RoccoW_-_09_-_Weeklybeats_2014_9_-_This_Little_Piggy_Danced.wav");
+	songs.push_back("RoccoW_-_Fuckaboing.wav");
+	songs.push_back("RoccoW_-_07_-_Weeklybeats_2014_7_-_Freaking_Viking.wav");
+	songs.push_back("RoccoW_-_Messeah.wav");
+
+	int s = rand() % songs.size();
+	if (!music.openFromFile("audio/" + songs[s])){
+		printf("error loading song\n");
+	}
+
+	music.setVolume(50);
+
+	music.play();
 }
