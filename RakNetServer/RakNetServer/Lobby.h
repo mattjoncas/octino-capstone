@@ -16,11 +16,12 @@ public:
 
 	std::vector<Tile> tiles;
 
-	bool inGame, ready;
+	bool inGame, ready, finished;
 	bool IsFull();
 
 	void Update();
 	void StartGame();
+	void Reset();
 
 	void IncrementTurn();
 

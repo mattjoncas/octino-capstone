@@ -4,16 +4,7 @@
 DatabaseManager::DatabaseManager(){
 	if (OpenDatabase()){
 		CreateTable();
-
-		if (CheckID("Matt")){
-			printf("Client ID already in database.\n");
-			if (Login("Matt", "password")){
-				printf("login returned true!\n");
-			}
-			else{
-				printf("login failed.\n");
-			}
-		}
+		
 		PrintDatabase();
 	}
 }
@@ -133,7 +124,6 @@ bool DatabaseManager::AddWin(std::string player_id){
 	}
 
 	int c_wins = std::stoi(results[rows * columns]);
-	std::cout << "wins converted to int = " << c_wins << "\n";
 	c_wins++;
 	//update players wins
 	s = "UPDATE ";

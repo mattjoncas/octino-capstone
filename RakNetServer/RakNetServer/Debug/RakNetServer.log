@@ -1,4 +1,4 @@
-﻿Build started 12/03/2015 9:49:02 PM.
+﻿Build started 22/03/2015 1:11:48 AM.
      1>Project "C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetServer\RakNetServer\RakNetServer.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\Matt Joncas\Desktop\RakNet-master\Source" /I"C:\Users\Matt Joncas\Desktop\RakNet-master\DependentExtensions\SQLite3Plugin" /ZI /nologo /W3 /WX- /sdl- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt NetworkManager.cpp
@@ -8,18 +8,19 @@
      1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(89): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(133): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(154): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(176): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(203): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(220): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(253): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(291): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(299): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(309): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(344): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(353): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(369): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(391): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(304): warning C4715: 'NetworkManager::FindLobby' : not all control paths return a value
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(195): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(210): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(237): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(254): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(287): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(325): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(333): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(343): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(381): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(390): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(406): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(428): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetserver\raknetserver\networkmanager.cpp(338): warning C4715: 'NetworkManager::FindLobby' : not all control paths return a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetServer\Debug\RakNetServer.exe" /INCREMENTAL /NOLOGO ws2_32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetServer\Debug\RakNetServer.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetServer\Debug\RakNetServer.lib" /MACHINE:X86 Debug\Base64Encoder.obj
          Debug\BitStream.obj
@@ -143,4 +144,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.60
+Time Elapsed 00:00:01.79

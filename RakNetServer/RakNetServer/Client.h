@@ -13,6 +13,8 @@ public:
 
 	float x, y, z;
 
+	int hand_count;
+
 	Client(RakNet::SystemAddress _address, std::string _id, std::string _lobby);
 
 	int ready, is_turn;

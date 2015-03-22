@@ -101,7 +101,7 @@ bool NetworkManager::Update(){
 			bsOut.Write((RakNet::MessageID)ID_INIT_MESSAGE_1);
 			bsOut.Write(_result);
 			SendPacket(&bsOut, packet->systemAddress);
-			if (_result < 2){
+			if (_result < 1){
 				//update clients in lobby
 				UpdateClients(FindLobby(FindClient(packet->systemAddress)->lobby));
 				//send exsiting tiles to new client [not needed anymore*]
@@ -139,7 +139,7 @@ bool NetworkManager::Update(){
 				}
 			}
 
-			std::cout << "Tile Count: " << FindLobby(FindClient(packet->systemAddress)->lobby).tiles.size() << "\n";
+			//std::cout << "Tile Count: " << FindLobby(FindClient(packet->systemAddress)->lobby).tiles.size() << "\n";
 		}
 			break;
 		case ID_READY_UP:
@@ -168,6 +168,25 @@ bool NetworkManager::Update(){
 			SendPacket(&bsOut, packet->systemAddress);
 		}
 			break;
+		case ID_CREATE_NEW_ID:
+		{
+			RakNet::RakString new_id, new_pass;
+			RakNet::BitStream bsIn(packet->data, packet->length, false);
+			bsIn.IgnoreBytes(sizeof(RakNet::MessageID));
+			bsIn.Read(new_id);
+			bsIn.Read(new_pass);
+
+			RakNet::BitStream bsOut;
+			bsOut.Write((RakNet::MessageID)ID_CREATE_NEW_ID);
+			if (dManager.AddClient(new_id.C_String(), new_pass.C_String())){
+				bsOut.Write(SUCCESSFUL);
+			}
+			else{
+				bsOut.Write(DEFAULT_ERROR);
+			}
+			SendPacket(&bsOut, packet->systemAddress);
+		}
+			break;
 		default:
 			printf("Message with identifier %i has arrived.\n", packet->data[0]);
 			break;
@@ -181,6 +200,21 @@ bool NetworkManager::Update(){
 			//send message to lobby
 			SendPacket(&bsOut, lobbies[i]);
 			lobbies[i].StartGame();
+			UpdateClients(lobbies[i]);
+		}
+		if (lobbies[i].finished){
+			RakNet::BitStream bsOut;
+			bsOut.Write((RakNet::MessageID)ID_END_GAME);
+			SendPacket(&bsOut, lobbies[i]);
+
+			for (int c = 0; c < lobbies[i].clients.size(); c++){
+				if (lobbies[i].clients[c]->hand_count == 0){
+					dManager.AddWin(lobbies[i].clients[c]->id);
+					break;
+				}
+			}
+
+			lobbies[i].Reset();
 			UpdateClients(lobbies[i]);
 		}
 	}
@@ -330,6 +364,9 @@ void NetworkManager::UpdateClient(RakNet::SystemAddress _address){
 	//z
 	bsIn.Read(n);
 	FindClient(_address)->z = n;
+	int h;
+	bsIn.Read(h);
+	FindClient(_address)->hand_count = h;
 	UpdateClients(FindLobby(FindClient(_address)->lobby));
 }
 

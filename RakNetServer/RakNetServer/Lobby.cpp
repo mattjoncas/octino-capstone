@@ -4,6 +4,7 @@
 Lobby::Lobby(){
 	inGame = false;
 	ready = false;
+	finished = false;
 }
 
 Lobby::~Lobby(){
@@ -20,6 +21,13 @@ void Lobby::Update(){
 			}
 		}
 	}
+	if (inGame){
+		for (int i = 0; i < clients.size(); i++){
+			if (clients[i]->hand_count == 0){
+				finished = true;
+			}
+		}
+	}
 }
 void Lobby::StartGame(){
 	//init for game
@@ -28,6 +36,16 @@ void Lobby::StartGame(){
 	inGame = true;
 
 	clients[0]->is_turn = 1;
+}
+void Lobby::Reset(){
+	inGame = false;
+	ready = false;
+
+	for (int i = 0; i < clients.size(); i++){
+		clients[i]->is_turn = 0;
+		clients[i]->ready = 0;
+	}
+	finished = false;
 }
 
 void Lobby::IncrementTurn(){
