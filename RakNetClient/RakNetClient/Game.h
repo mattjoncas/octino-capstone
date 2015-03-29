@@ -24,6 +24,7 @@ private:
 	std::vector<int> hand;
 	void FillHand(int hand_size);
 	void EmptyHand();
+	void PickUpTile();
 
 	void LoadGUI();
 
@@ -37,10 +38,14 @@ private:
 	bool CheckTiles();
 	bool TilePass(Tile *i_tile, Tile *a_tile, int previous_index, std::vector<int> _equation, std::vector<Tile*> _tiles);
 	void AdjustCamera();
+	void RemoveTile();
 
 	void AddChatMessage(std::string _message, bool incoming_message);
 
 	void GeneratePuzzle();
+
+	//menu
+	void BindMainMenu();
 public:
 	~Game();
 	virtual void Load() override;

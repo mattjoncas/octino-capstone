@@ -421,3 +421,14 @@ std::string NetworkManager::CreateNewID(std::string _new_id, std::string _new_pa
 		return "Please enter a new id & password.";
 	}
 }
+
+NetworkManager::GameState NetworkManager::GetState(){
+	return state;
+}
+NetworkManager::GameState NetworkManager::GetPreState(){
+	return previous_state;
+}
+void NetworkManager::SetState(GameState _state){
+	previous_state = state;
+	state = _state;
+}

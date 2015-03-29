@@ -36,7 +36,7 @@ class NetworkManager{
 
 public:
 	enum GameState{
-		MAIN_MENU, NETWORK_MENU, CREATE_ID_MENU, IN_LOBBY, IN_GAME //NETWORK_LOBBY, NETWORK_GAME, OFFLINE_GAME, PUZZLE_GAME, TUTORIAL
+		MAIN_MENU, SETTINGS_MENU, NETWORK_MENU, CREATE_ID_MENU, IN_LOBBY, IN_GAME, TUTORIAL, PAUSED //NETWORK_LOBBY, NETWORK_GAME, OFFLINE_GAME, PUZZLE_GAME
 	};
 
 	NetworkManager();
@@ -68,8 +68,10 @@ public:
 	void UpdateServer(glm::vec3 _pos, int _hand_count);
 
 	std::string GetServerMessage();
-
-	GameState state;
+	
+	GameState GetState();
+	GameState GetPreState();
+	void SetState(GameState _state);
 
 	void ReadyUp();
 	std::string CreateNewID(std::string _new_id, std::string _new_pass);
@@ -93,5 +95,7 @@ private:
 	std::vector<std::string> new_messages;
 
 	void UpdateClientData();
+
+	GameState state, previous_state;
 };
 
