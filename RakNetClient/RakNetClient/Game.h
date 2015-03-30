@@ -40,7 +40,10 @@ private:
 	void AdjustCamera();
 	void RemoveTile();
 
+	void ClearTiles();
+
 	void AddChatMessage(std::string _message, bool incoming_message);
+	void ClearChat();
 
 	void GeneratePuzzle();
 
