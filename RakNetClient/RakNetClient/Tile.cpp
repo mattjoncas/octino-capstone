@@ -31,9 +31,20 @@ void Tile::Update(float _delta){
 		position.z = -49.5f;
 		acceleration = glm::vec3(0.0f);
 		velocity = glm::vec3(0.0f);
+		
+		GetChild(0)->acceleration.z = -9.8f;
+		GetChild(0)->velocity.z = 7.5f;
+		number_bounced = true;
 	}
-	
 	GameObject::Update(_delta);
+	if (number_bounced){
+		if (GetChild(0)->position.z < 0.1f){
+			GetChild(0)->position = glm::vec3(0.0f, 0.0f, 0.1f);
+			GetChild(0)->velocity = glm::vec3(0.0f);
+			GetChild(0)->acceleration = glm::vec3(0.0f);
+			number_bounced = false;
+		}
+	}
 }
 void Tile::SetTileRotation(glm::vec3 _rotation){
 	//set tile gameobject rotation

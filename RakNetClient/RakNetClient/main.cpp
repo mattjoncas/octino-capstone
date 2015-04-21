@@ -2,6 +2,7 @@
 #include <gl/glew.h>
 #include <SFML/OpenGL.hpp>
 #include "Game.h"
+#include "SceneManager.h"
 
 #define SCREEN_WIDTH 1600
 #define SCREEN_HEIGHT 900
@@ -10,37 +11,37 @@
 sf::ContextSettings settings(24, 8, 8, 2, 0);
 sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Prototype", sf::Style::Fullscreen, settings);
 
-bool running = true;
-
 int main(){
 	window.setVerticalSyncEnabled(true);
 
-	Game game;
-	game.SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-	game.Load();
+	mor::SceneManager sManager = mor::SceneManager::GetInstance();
 
-	//glClearColor(0.883f, 0.734f, 0.48f, 1.0);
-	//glClearColor(0.05f, 0.05f, 0.05f, 1.0);
-	//glClearColor(0.1f, 0.1f, 0.1f, 1.0);
+	Game *game = new Game();
+	game->SetWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	game->Load();
+
+	sManager.AddScene(game);
+	sManager.BindScene(game);
+	
 	glClearColor(0.204f, 0.251f, 0.137f, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	
 	sf::Clock c = sf::Clock();
-	while (running){
+	while (sManager.IsRunning()){
 		
 		//error checking
 		if (glGetError()){
 			std::cout << "error\n";
 		}
-		game.Update(c.getElapsedTime().asSeconds(), &window);
-		
-		running = game.IsRunning();
+		dynamic_cast<Game*>(sManager.C_Scene())->Update(c.getElapsedTime().asSeconds(), &window);
+		//game->Update(c.getElapsedTime().asSeconds(), &window);
+		sManager.Update();
 
 		c.restart();
-		//render
-		game.Render(&window);
+		dynamic_cast<Game*>(sManager.C_Scene())->Render(&window);
+		//game->Render(&window);
 		
 		window.display();
 	}

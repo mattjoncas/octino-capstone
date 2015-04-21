@@ -33,5 +33,6 @@ private:
 	int value;
 	Tile *adjacent_tiles[8];
 	//bool placed;
+	bool number_bounced = false;
 };
 

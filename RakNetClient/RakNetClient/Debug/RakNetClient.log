@@ -1,95 +1,67 @@
-﻿Build started 31/03/2015 2:40:06 PM.
+﻿Build started 20/04/2015 8:16:38 PM.
      1>Project "C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\RakNetClient\RakNetClient.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\SFML\include /I"C:\Users\Matt Joncas\Desktop\RakNet-master\Source" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Renderer" /I"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\src" /I"C:\Users\Matt Joncas\Desktop\glm-0.9.5.4\glm" /I"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\GUI" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _CRT_SECURE_NO_WARNINGS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp
          Game.cpp
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(59): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(116): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(117): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(118): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(119): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(120): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(132): warning C4244: 'initializing' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(141): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(142): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(156): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(157): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(164): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(165): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(166): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(167): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(179): warning C4244: 'argument' : conversion from 'double' to 'sf::Uint8', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(239): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(242): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(248): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(294): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(296): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(564): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(649): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(687): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(768): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(772): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(773): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(802): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(806): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(834): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(865): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(924): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(945): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(960): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(978): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1045): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1048): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1055): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1056): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1073): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1169): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1203): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1310): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1337): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1355): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(57): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(284): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(286): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(547): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(623): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(726): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(730): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(731): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(760): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(764): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(793): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(870): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(891): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(906): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(976): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(979): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(986): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(988): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1005): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1106): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1140): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1233): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1260): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1277): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1304): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1318): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1328): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1343): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1370): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1370): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1372): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1372): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
      1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1381): warning C4018: '<' : signed/unsigned mismatch
      1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1392): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1406): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1431): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1431): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1433): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1433): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1442): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1454): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1481): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1505): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1531): warning C4244: '-=' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1547): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1548): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1563): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1580): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1636): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1641): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1655): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1656): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1673): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1682): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1708): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1709): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1770): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1773): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1789): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1792): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1803): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1807): warning C4258: 'i' : definition from the for loop is ignored; the definition from the enclosing scope is used
-                 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1803) : definition of 'i' ignored
-                 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1689) : definition of 'i' used
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1816): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1820): warning C4258: 'i' : definition from the for loop is ignored; the definition from the enclosing scope is used
-                 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1816) : definition of 'i' ignored
-                 c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1689) : definition of 'i' used
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1842): warning C4018: '<' : signed/unsigned mismatch
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1857): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1857): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1859): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1859): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1516): warning C4715: 'Game::CheckTiles' : not all control paths return a value
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1412): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1436): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1463): warning C4244: '-=' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1479): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1480): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1495): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1567): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1570): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1584): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1585): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1601): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1610): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1636): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1637): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1698): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1701): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1717): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1720): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1730): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1743): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1767): warning C4018: '<' : signed/unsigned mismatch
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1781): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1781): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1783): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>c:\users\matt joncas\documents\visual studio 2013\projects\raknetclient\raknetclient\game.cpp(1783): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\SFML\lib /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\Renderer\Debug" /LIBPATH:"C:\Users\Matt Joncas\Desktop\soil\Simple OpenGL Image Library\lib" /LIBPATH:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\GUI\Debug" "sfml-audio-d.lib" "sfml-graphics-d.lib" "sfml-network-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" ws2_32.lib OpenGL32.lib glew32.lib Renderer.lib GUI.lib SOIL.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Matt Joncas\Documents\Visual Studio 2013\Projects\RakNetClient\Debug\RakNetClient.lib" /MACHINE:X86 Debug\Base64Encoder.obj
          Debug\BitStream.obj
@@ -211,4 +183,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:05.92
+Time Elapsed 00:00:02.54
