@@ -85,7 +85,7 @@ void Game::Load(){
 	for (int y = 0; y < 5; y++){
 		for (int x = 0; x < 5; x++){
 			menu_objects.push_back(new mor::GameObject(glm::vec3(x * 5 - 2 * 5, y * 3 - 2 * 3, -15.0f), glm::vec3(0.0f), glm::vec3(1.0f), glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
-			//menu_tile->Init(tile_model, texture_shader, renderer.LoadTexture("tile09.png"), NULL); <-WHY IS THIS BROKEN!!?
+			//menu_tile->Init(tile_model, texture_shader, renderer.LoadTexture("tile09.png"), NULL);
 			menu_objects[menu_objects.size() - 1]->model = tile_model;
 			menu_objects[menu_objects.size() - 1]->material = renderer.LoadMaterial(glm::vec4(1.0), glm::vec4(0.8, 0.8, 0.8, 1.0), glm::vec4(0.25, 0.25, 0.25, 1.0), 100.0f);
 
